@@ -1,0 +1,12 @@
+services:
+  inventory-ml-api:
+    build: .
+    container_name: inventory-ml-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
