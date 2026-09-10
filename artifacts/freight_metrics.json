@@ -1,0 +1,8 @@
+{
+  "mae": 44.2157,
+  "rmse": 108.7411,
+  "r2": 0.984031,
+  "train_rows": 4434,
+  "test_rows": 1109,
+  "split": "chronological_80_20"
+}
