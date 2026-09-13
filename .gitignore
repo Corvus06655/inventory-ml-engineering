@@ -1,5 +1,6 @@
 # Local database
 inventory.db
+uploaded_inventory.db
 
 # Python
 __pycache__/
@@ -7,3 +8,6 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Streamlit
+.streamlit/secrets.toml
