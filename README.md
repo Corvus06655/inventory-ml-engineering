@@ -1,27 +1,14 @@
-# Inventory & Vendor Purchase Analytics + ML
+# Inventory & Vendor Intelligence with Predictive ML
 
-An analytics-focused project for understanding vendor purchases, invoice behavior and freight costs using **SQL, Python, Pandas and scikit-learn**.
+A practical analytics and machine-learning project for vendor purchases, invoice transactions, freight costs, and invoice anomaly detection.
 
-The project combines practical **data cleaning, SQL analysis, EDA, feature engineering and machine learning** on a large inventory / vendor-invoice dataset.
+The project demonstrates a reproducible workflow from **SQLite data → SQL/Python feature engineering → exploratory analysis → ML modeling → saved artifacts**.
 
 ## What this project does
 
-### 1. Vendor & Purchase Analytics
+### 1. Freight Cost Prediction
 
-The notebooks use SQL and Python to explore:
-- purchase and invoice records
-- PO-level purchase aggregates
-- invoice amounts and quantities
-- freight costs
-- PO-to-invoice and invoice-to-payment delays
-- receiving delays and vendor-level patterns
-- unusual invoice behavior
-
-The analysis is designed to move from **raw transactional data → cleaned dataset → business observations → ML features**.
-
-### 2. Freight Cost Prediction
-
-A supervised regression model predicts freight cost using:
+Predicts invoice freight cost using:
 - invoice dollars
 - quantity
 - vendor number
@@ -31,29 +18,29 @@ A supervised regression model predicts freight cost using:
 
 **Model:** ExtraTrees Regressor  
 **Evaluation:** chronological 80/20 holdout  
-**Metrics:** MAE, RMSE and R²
+**Metrics:** MAE, RMSE, R²
 
-Latest local chronological holdout:
+Current recorded holdout results:
 - **R²: 0.9840**
 - **MAE: 44.22**
 - **RMSE: 108.74**
 
-A chronological split is used because it is more representative of predicting future records than relying only on a random split.
+The chronological split keeps the latest observations for testing, making the evaluation more representative of predicting future transactions.
 
-### 3. Invoice Anomaly Analysis
+### 2. Invoice Anomaly Detection
 
-The project also uses **Isolation Forest** to identify unusual invoice records based on transaction and timing characteristics.
+Uses **Isolation Forest** to identify unusual vendor-invoice transactions based on transaction value, quantity, freight, timing, and related features.
 
-This is intentionally treated as **anomaly detection**, not as supervised fraud classification, because the original `flagged_invoice` label was created from business rules. Training a classifier on the same rule-derived variables would create target leakage and give a misleading ML result.
+This is deliberately treated as **unsupervised anomaly detection**, not fraud classification. A rule-derived invoice flag is not used as independent ML ground truth, avoiding a misleading supervised-learning claim.
 
 ## Project structure
 
 ```text
 inventory-ml-engineering/
 ├── notebooks/
-│   ├── Freight Prediction.ipynb
-│   ├── invoice flagging.ipynb
-│   └── Inventory_ML_End_to_End.ipynb
+│   ├── freight_cost_prediction.ipynb
+│   ├── invoice_anomaly_analysis.ipynb
+│   └── README.md
 ├── src/
 │   ├── data.py
 │   ├── freight_model.py
@@ -62,28 +49,27 @@ inventory-ml-engineering/
 │   ├── train_freight.py
 │   └── run_anomaly_detection.py
 ├── app/
-│   └── main.py
 ├── tests/
-│   └── test_api.py
 ├── artifacts/
+├── data/
 ├── DATA_DICTIONARY.md
 ├── requirements.txt
-└── README.md
+├── requirements-api.txt
+├── Dockerfile
+└── docker-compose.yml
 ```
 
 ## Dataset
 
-The source SQLite database contains purchase, pricing, vendor-invoice and inventory tables. The original database is kept local and is not committed to GitHub because of its large size.
+The source SQLite database contains purchase, pricing, vendor-invoice, and inventory tables. The database is intentionally **not committed to GitHub** because of its size.
 
-Place the database at the project root as:
+Place the database at the project root:
 
 ```text
- data.db
+data.db
 ```
 
-before running the training scripts.
-
-## Run the analysis / ML workflow
+## Reproduce the ML workflow
 
 ```bash
 pip install -r requirements.txt
@@ -91,29 +77,32 @@ python scripts/train_freight.py
 python scripts/run_anomaly_detection.py
 ```
 
-The scripts recreate the model artifacts under `artifacts/`.
+The scripts create model outputs under `artifacts/`.
 
 ## Notebooks
 
-The repository keeps the original project notebooks close to their original workflow, with only necessary fixes for portability / execution.
+The repository contains two focused notebooks:
 
-- **Freight Prediction.ipynb** — freight-cost modeling workflow
-- **invoice flagging.ipynb** — SQL/EDA, rule-based invoice analysis and exploratory classification
-- **Inventory_ML_End_to_End.ipynb** — cleaned end-to-end walkthrough of the analytics + ML approach
+- **freight_cost_prediction.ipynb** — EDA, chronological holdout, freight-cost modeling, evaluation, and interpretation.
+- **invoice_anomaly_analysis.ipynb** — invoice feature exploration and Isolation Forest anomaly detection.
 
-## Engineering extras
+The notebooks are intentionally aligned with the reusable implementation in `src/` and `scripts/`.
 
-A small FastAPI service, tests and Docker configuration are included as supporting implementation pieces. They are not the main focus of this project; the primary emphasis is **data analytics, SQL/Python analysis and practical ML**.
+## Engineering implementation
 
-## Resume-ready description
+The ML code is separated from exploratory notebooks:
 
-**Inventory & Vendor Purchase Analytics + ML | Python, SQL, Pandas, scikit-learn**
+- `src/data.py` centralizes SQLite table loading.
+- `src/freight_model.py` defines preprocessing and the ExtraTrees regression pipeline.
+- `src/invoice_anomaly.py` defines the Isolation Forest detector.
+- `scripts/` provides reproducible training/scoring entry points.
+- `artifacts/` stores generated model outputs and evaluation summaries.
 
-- Analyzed vendor purchase and invoice data using SQL and Python to study freight costs, payment delays, receiving patterns and unusual transactions.
-- Built reusable EDA and feature-engineering workflows from PO-level purchase aggregates and invoice data.
-- Developed an ExtraTrees regression model for freight-cost prediction, achieving **R² ≈ 0.98** on a chronological holdout set.
-- Applied Isolation Forest for unsupervised invoice anomaly detection without relying on a rule-generated ML target.
+## Resume-ready project summary
 
-## Notes on the original invoice classifier
+**Inventory & Vendor Intelligence with Predictive ML | Python, SQL, Pandas, scikit-learn**
 
-The original notebook contains a rule-based `flagged_invoice` label and exploratory classification experiments. Those experiments are preserved for reference, but the project does **not** present them as a reliable fraud-prediction model because the target is derived from the same business rules used in the analysis.
+- Investigated vendor freight-cost drivers and invoice irregularities across purchase and invoice data using SQL and Python.
+- Engineered PO-level and invoice-timing features for predictive modeling.
+- Built an ExtraTrees freight-cost regression model achieving **R² = 0.984** on a chronological 80/20 holdout (MAE 44.22, RMSE 108.74).
+- Applied Isolation Forest to identify anomalous invoice transactions without treating a rule-generated label as independent fraud ground truth.
