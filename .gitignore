@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-.ipynb_checkpoints/
-.venv/
-env/
-.pytest_cache/
-data.db
-artifacts/*.joblib
-artifacts/*.csv
