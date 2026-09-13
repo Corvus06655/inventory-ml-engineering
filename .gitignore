@@ -1,0 +1,9 @@
+# Local database
+inventory.db
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
