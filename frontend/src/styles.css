@@ -668,3 +668,6 @@ body{background:radial-gradient(ellipse at 80% 0%,rgba(54,220,200,.055),transpar
 .video-failed{display:none}
 @media(max-width:800px){.sidebar{background:#09120d}.topbar{background:rgba(5,11,8,.97)}}
 @media(prefers-reduced-motion:reduce){.hero-video{display:none}}
+
+
+.hero-video-wrap:has(.video-failed){background-image:url('https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1800');background-position:center;background-size:cover}
