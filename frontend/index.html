@@ -22,15 +22,144 @@
 <script>
 const API='https://inventory-ml-engineering-api.onrender.com';
 const sessionMetrics={requests:0,flags:0,lastEstimate:null,events:[]};
-function renderSessionMetrics(){document.getElementById('requestCount').textContent=sessionMetrics.requests;document.getElementById('flagCount').textContent=sessionMetrics.flags;document.getElementById('lastEstimate').textContent=sessionMetrics.lastEstimate===null?'—':'
+
+function renderSessionMetrics(){
+ const requestCount=document.getElementById('requestCount');
+ const flagCount=document.getElementById('flagCount');
+ const estimate=document.getElementById('lastEstimate');
+ const note=document.getElementById('lastEstimateNote');
+ const count=document.getElementById('activityCount');
+ if(requestCount) requestCount.textContent=sessionMetrics.requests;
+ if(flagCount) flagCount.textContent=sessionMetrics.flags;
+ if(estimate) estimate.textContent=sessionMetrics.lastEstimate===null?'—':'</body></html>+Number(sessionMetrics.lastEstimate).toFixed(2);document.getElementById('lastEstimateNote').textContent=sessionMetrics.lastEstimate===null?'Run a prediction to populate':'Latest API estimate · demo data may be synthetic';document.getElementById('activityCount').textContent=sessionMetrics.events.length+' EVENTS';const body=document.getElementById('activityBody');if(!sessionMetrics.events.length){body.innerHTML='<div class="empty-state">No requests yet. Run a prediction or validate an invoice to see activity.</div>';return}const table=document.createElement('table');table.className='activity-table';table.innerHTML='<thead><tr><th>Endpoint</th><th>Result</th><th>Details</th><th>Time</th></tr></thead>';const tbody=document.createElement('tbody');sessionMetrics.events.forEach(e=>{const tr=document.createElement('tr');[e.endpoint,e.result,e.details,e.time].forEach((v,i)=>{const td=document.createElement('td');if(i===1){const badge=document.createElement('span');badge.className='status-badge '+(e.kind==='warn'?'warn':e.kind==='ok'?'ok':'info');badge.textContent=v;td.appendChild(badge)}else td.textContent=v;tr.appendChild(td)});tbody.appendChild(tr)});table.appendChild(tbody);body.replaceChildren(table)}
+function recordActivity(endpoint,result,details,kind='info'){sessionMetrics.events.unshift({endpoint,result,details,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}),kind});sessionMetrics.events=sessionMetrics.events.slice(0,8);sessionMetrics.requests++;renderSessionMetrics()}
+function clearActivity(){sessionMetrics.events=[];renderSessionMetrics()}
+
 async function loadHealth(){const dot=document.getElementById('statusDot');try{const r=await fetch(API+'/health');if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();dot.style.background='var(--mint)';document.getElementById('statusText').textContent='API online';document.getElementById('monitorLabel').textContent='Online';document.getElementById('healthTitle').textContent='Service operational';document.getElementById('healthSub').textContent='Health endpoint returned successfully';document.getElementById('healthBar').style.width='100%';if(d.data_mode)document.getElementById('healthSub').textContent='Data mode: '+d.data_mode+(d.training_rows?' · '+d.training_rows+' training rows':'');}catch(e){dot.style.background='var(--amber)';document.getElementById('statusText').textContent='API waking up';document.getElementById('monitorLabel').textContent='Unavailable';document.getElementById('healthTitle').textContent='Service not responding';document.getElementById('healthSub').textContent='It may be waking from a free-tier sleep. Try again shortly.';document.getElementById('healthBar').style.width='25%';}}
 function setValue(id,v){document.getElementById(id).value=v}
 function showResult(id,data){document.getElementById(id).innerHTML='<pre></pre>';document.getElementById(id).querySelector('pre').textContent=JSON.stringify(data,null,2)}
-async function callApi(path,payload,outId,btnId){const out=document.getElementById(outId),btn=document.getElementById(btnId);btn.disabled=true;btn.style.opacity='.65';out.innerHTML='<div class="hint">Sending request to live API…</div>';const endpoint=path==='/predict-freight'?'Freight prediction':'Invoice validation';try{const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();showResult(outId,{status:r.status,...data});if(!r.ok){const detail=Array.isArray(data.detail)?data.detail.map(x=>[x.loc?.slice(1).join('.')||'input',x.msg].join(': ')).join(' | '):(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail||data));throw Error(detail||'Request failed (HTTP '+r.status+')')}if(path==='/predict-freight'){sessionMetrics.lastEstimate=data.predicted_freight;recordActivity(endpoint,'SUCCESS','Estimate: $'+Number(data.predicted_freight).toFixed(2),'ok')}else{const flagged=Boolean(data.flagged)||data.status==='FLAGGED';if(flagged)sessionMetrics.flags++;recordActivity(endpoint,flagged?'FLAGGED':'NORMAL','Mismatch: $'+Number(data.dollar_mismatch||0).toFixed(2),flagged?'warn':'ok')}}catch(e){out.innerHTML='<pre></pre>';out.querySelector('pre').textContent='Request failed: '+e.message+'\nCheck API status or open the Swagger docs.';recordActivity(endpoint,'ERROR',e.message,'warn')}finally{btn.disabled=false;btn.style.opacity='1'}}
+async function callApi(path,payload,outId,btnId){const out=document.getElementById(outId),btn=document.getElementById(btnId);btn.disabled=true;btn.style.opacity='.65';out.innerHTML='<div class="hint">Sending request to live API…</div>';try{const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();showResult(outId,{status:r.status,...data});if(!r.ok){const detail=Array.isArray(data.detail)?data.detail.map(x=>[x.loc?.slice(1).join('.')||'input',x.msg].join(': ')).join(' | '):(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail||data));throw Error(detail||'Request failed (HTTP '+r.status+')')}}catch(e){out.innerHTML='<pre></pre>';out.querySelector('pre').textContent='Request failed: '+e.message+'\nCheck API status or open the Swagger docs.'}finally{btn.disabled=false;btn.style.opacity='1'}}
 function predictFreight(){const amount=Number(document.getElementById('invoiceDollars').value);if(!Number.isFinite(amount)||amount<=0){showResult('predictOutput',{error:'Enter an invoice amount greater than zero.'});return}callApi('/predict-freight',{invoice_dollars:amount},'predictOutput','predictBtn')}
 function validateInvoice(){const expected=Number(document.getElementById('expectedTotal').value),actual=Number(document.getElementById('actualTotal').value),delay=Number(document.getElementById('receivingDelay').value);if([expected,actual,delay].some(v=>!Number.isFinite(v)||v<0)){showResult('validateOutput',{error:'Enter valid non-negative numbers.'});return}callApi('/validate-invoice',{invoice_dollars:actual,purchase_total_dollars:expected,average_receiving_delay_days:delay},'validateOutput','validateBtn')}
 function resetValidation(){setValue('expectedTotal',850);setValue('actualTotal',865);setValue('receivingDelay',4);document.getElementById('validateOutput').innerHTML='<div class="hint">Validation results will appear here.</div>'}
 loadHealth();
+</script></body></html>+Number(sessionMetrics.lastEstimate).toFixed(2);
+ if(note) note.textContent=sessionMetrics.lastEstimate===null?'Run a prediction to populate':'Latest API estimate · demo data may be synthetic';
+ if(count) count.textContent=sessionMetrics.events.length+' EVENTS';
+ const body=document.getElementById('activityBody');
+ if(!body) return;
+ if(!sessionMetrics.events.length){body.innerHTML='<div class="empty-state">No requests yet. Run a prediction or validate an invoice to see activity.</div>';return;}
+ const table=document.createElement('table');table.className='activity-table';
+ table.innerHTML='<thead><tr><th>Endpoint</th><th>Result</th><th>Details</th><th>Time</th></tr></thead>';
+ const tbody=document.createElement('tbody');
+ sessionMetrics.events.forEach(e=>{
+  const tr=document.createElement('tr');
+  [e.endpoint,e.result,e.details,e.time].forEach((v,i)=>{
+   const td=document.createElement('td');
+   if(i===1){const badge=document.createElement('span');badge.className='status-badge '+(e.kind==='warn'?'warn':e.kind==='ok'?'ok':'info');badge.textContent=v;td.appendChild(badge);}
+   else td.textContent=v;
+   tr.appendChild(td);
+  });
+  tbody.appendChild(tr);
+ });
+ table.appendChild(tbody);body.replaceChildren(table);
+}
+function recordActivity(endpoint,result,details,kind='info'){
+ sessionMetrics.events.unshift({endpoint,result,details,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}),kind});
+ sessionMetrics.events=sessionMetrics.events.slice(0,8);sessionMetrics.requests++;renderSessionMetrics();
+}
+function clearActivity(){sessionMetrics.events=[];renderSessionMetrics();}
+
+async function loadHealth(){
+ const dot=document.getElementById('statusDot');
+ try{
+  const r=await fetch(API+'/health');
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const d=await r.json();
+  dot.style.background='var(--mint)';
+  document.getElementById('statusText').textContent='API online';
+  document.getElementById('monitorLabel').textContent='Online';
+  document.getElementById('healthTitle').textContent='Service operational';
+  document.getElementById('healthSub').textContent='Health endpoint returned successfully';
+  document.getElementById('healthBar').style.width='100%';
+  if(d.data_mode)document.getElementById('healthSub').textContent='Data mode: '+d.data_mode+(d.training_rows?' · '+d.training_rows+' training rows':'');
+ }catch(e){
+  dot.style.background='var(--amber)';
+  document.getElementById('statusText').textContent='API waking up';
+  document.getElementById('monitorLabel').textContent='Unavailable';
+  document.getElementById('healthTitle').textContent='Service not responding';
+  document.getElementById('healthSub').textContent='It may be waking from a free-tier sleep. Try again shortly.';
+  document.getElementById('healthBar').style.width='25%';
+ }
+}
+function setValue(id,v){document.getElementById(id).value=v;}
+function showResult(id,data){
+ const out=document.getElementById(id);out.innerHTML='<pre></pre>';
+ out.querySelector('pre').textContent=JSON.stringify(data,null,2);
+}
+async function callApi(path,payload,outId,btnId){
+ const out=document.getElementById(outId),btn=document.getElementById(btnId);
+ btn.disabled=true;btn.style.opacity='.65';out.innerHTML='<div class="hint">Sending request to live API…</div>';
+ const endpoint=path==='/predict-freight'?'Freight prediction':'Invoice validation';
+ try{
+  const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const data=await r.json();showResult(outId,{status:r.status,...data});
+  if(!r.ok){
+   const detail=Array.isArray(data.detail)?data.detail.map(x=>[x.loc?.slice(1).join('.')||'input',x.msg].join(': ')).join(' | '):(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail||data));
+   throw new Error(detail||'Request failed (HTTP '+r.status+')');
+  }
+  if(path==='/predict-freight'){
+   sessionMetrics.lastEstimate=data.predicted_freight;
+   recordActivity(endpoint,'SUCCESS','Estimate: </body></html>+Number(sessionMetrics.lastEstimate).toFixed(2);document.getElementById('lastEstimateNote').textContent=sessionMetrics.lastEstimate===null?'Run a prediction to populate':'Latest API estimate · demo data may be synthetic';document.getElementById('activityCount').textContent=sessionMetrics.events.length+' EVENTS';const body=document.getElementById('activityBody');if(!sessionMetrics.events.length){body.innerHTML='<div class="empty-state">No requests yet. Run a prediction or validate an invoice to see activity.</div>';return}const table=document.createElement('table');table.className='activity-table';table.innerHTML='<thead><tr><th>Endpoint</th><th>Result</th><th>Details</th><th>Time</th></tr></thead>';const tbody=document.createElement('tbody');sessionMetrics.events.forEach(e=>{const tr=document.createElement('tr');[e.endpoint,e.result,e.details,e.time].forEach((v,i)=>{const td=document.createElement('td');if(i===1){const badge=document.createElement('span');badge.className='status-badge '+(e.kind==='warn'?'warn':e.kind==='ok'?'ok':'info');badge.textContent=v;td.appendChild(badge)}else td.textContent=v;tr.appendChild(td)});tbody.appendChild(tr)});table.appendChild(tbody);body.replaceChildren(table)}
+function recordActivity(endpoint,result,details,kind='info'){sessionMetrics.events.unshift({endpoint,result,details,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}),kind});sessionMetrics.events=sessionMetrics.events.slice(0,8);sessionMetrics.requests++;renderSessionMetrics()}
+function clearActivity(){sessionMetrics.events=[];renderSessionMetrics()}
+
+async function loadHealth(){const dot=document.getElementById('statusDot');try{const r=await fetch(API+'/health');if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();dot.style.background='var(--mint)';document.getElementById('statusText').textContent='API online';document.getElementById('monitorLabel').textContent='Online';document.getElementById('healthTitle').textContent='Service operational';document.getElementById('healthSub').textContent='Health endpoint returned successfully';document.getElementById('healthBar').style.width='100%';if(d.data_mode)document.getElementById('healthSub').textContent='Data mode: '+d.data_mode+(d.training_rows?' · '+d.training_rows+' training rows':'');}catch(e){dot.style.background='var(--amber)';document.getElementById('statusText').textContent='API waking up';document.getElementById('monitorLabel').textContent='Unavailable';document.getElementById('healthTitle').textContent='Service not responding';document.getElementById('healthSub').textContent='It may be waking from a free-tier sleep. Try again shortly.';document.getElementById('healthBar').style.width='25%';}}
+function setValue(id,v){document.getElementById(id).value=v}
+function showResult(id,data){document.getElementById(id).innerHTML='<pre></pre>';document.getElementById(id).querySelector('pre').textContent=JSON.stringify(data,null,2)}
+async function callApi(path,payload,outId,btnId){const out=document.getElementById(outId),btn=document.getElementById(btnId);btn.disabled=true;btn.style.opacity='.65';out.innerHTML='<div class="hint">Sending request to live API…</div>';try{const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();showResult(outId,{status:r.status,...data});if(!r.ok){const detail=Array.isArray(data.detail)?data.detail.map(x=>[x.loc?.slice(1).join('.')||'input',x.msg].join(': ')).join(' | '):(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail||data));throw Error(detail||'Request failed (HTTP '+r.status+')')}}catch(e){out.innerHTML='<pre></pre>';out.querySelector('pre').textContent='Request failed: '+e.message+'\nCheck API status or open the Swagger docs.'}finally{btn.disabled=false;btn.style.opacity='1'}}
+function predictFreight(){const amount=Number(document.getElementById('invoiceDollars').value);if(!Number.isFinite(amount)||amount<=0){showResult('predictOutput',{error:'Enter an invoice amount greater than zero.'});return}callApi('/predict-freight',{invoice_dollars:amount},'predictOutput','predictBtn')}
+function validateInvoice(){const expected=Number(document.getElementById('expectedTotal').value),actual=Number(document.getElementById('actualTotal').value),delay=Number(document.getElementById('receivingDelay').value);if([expected,actual,delay].some(v=>!Number.isFinite(v)||v<0)){showResult('validateOutput',{error:'Enter valid non-negative numbers.'});return}callApi('/validate-invoice',{invoice_dollars:actual,purchase_total_dollars:expected,average_receiving_delay_days:delay},'validateOutput','validateBtn')}
+function resetValidation(){setValue('expectedTotal',850);setValue('actualTotal',865);setValue('receivingDelay',4);document.getElementById('validateOutput').innerHTML='<div class="hint">Validation results will appear here.</div>'}
+loadHealth();
+</script></body></html>+Number(data.predicted_freight).toFixed(2),'ok');
+  }else{
+   const flagged=Boolean(data.flagged)||data.status==='FLAGGED';
+   if(flagged)sessionMetrics.flags++;
+   recordActivity(endpoint,flagged?'FLAGGED':'NORMAL','Mismatch: </body></html>+Number(sessionMetrics.lastEstimate).toFixed(2);document.getElementById('lastEstimateNote').textContent=sessionMetrics.lastEstimate===null?'Run a prediction to populate':'Latest API estimate · demo data may be synthetic';document.getElementById('activityCount').textContent=sessionMetrics.events.length+' EVENTS';const body=document.getElementById('activityBody');if(!sessionMetrics.events.length){body.innerHTML='<div class="empty-state">No requests yet. Run a prediction or validate an invoice to see activity.</div>';return}const table=document.createElement('table');table.className='activity-table';table.innerHTML='<thead><tr><th>Endpoint</th><th>Result</th><th>Details</th><th>Time</th></tr></thead>';const tbody=document.createElement('tbody');sessionMetrics.events.forEach(e=>{const tr=document.createElement('tr');[e.endpoint,e.result,e.details,e.time].forEach((v,i)=>{const td=document.createElement('td');if(i===1){const badge=document.createElement('span');badge.className='status-badge '+(e.kind==='warn'?'warn':e.kind==='ok'?'ok':'info');badge.textContent=v;td.appendChild(badge)}else td.textContent=v;tr.appendChild(td)});tbody.appendChild(tr)});table.appendChild(tbody);body.replaceChildren(table)}
+function recordActivity(endpoint,result,details,kind='info'){sessionMetrics.events.unshift({endpoint,result,details,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}),kind});sessionMetrics.events=sessionMetrics.events.slice(0,8);sessionMetrics.requests++;renderSessionMetrics()}
+function clearActivity(){sessionMetrics.events=[];renderSessionMetrics()}
+
+async function loadHealth(){const dot=document.getElementById('statusDot');try{const r=await fetch(API+'/health');if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();dot.style.background='var(--mint)';document.getElementById('statusText').textContent='API online';document.getElementById('monitorLabel').textContent='Online';document.getElementById('healthTitle').textContent='Service operational';document.getElementById('healthSub').textContent='Health endpoint returned successfully';document.getElementById('healthBar').style.width='100%';if(d.data_mode)document.getElementById('healthSub').textContent='Data mode: '+d.data_mode+(d.training_rows?' · '+d.training_rows+' training rows':'');}catch(e){dot.style.background='var(--amber)';document.getElementById('statusText').textContent='API waking up';document.getElementById('monitorLabel').textContent='Unavailable';document.getElementById('healthTitle').textContent='Service not responding';document.getElementById('healthSub').textContent='It may be waking from a free-tier sleep. Try again shortly.';document.getElementById('healthBar').style.width='25%';}}
+function setValue(id,v){document.getElementById(id).value=v}
+function showResult(id,data){document.getElementById(id).innerHTML='<pre></pre>';document.getElementById(id).querySelector('pre').textContent=JSON.stringify(data,null,2)}
+async function callApi(path,payload,outId,btnId){const out=document.getElementById(outId),btn=document.getElementById(btnId);btn.disabled=true;btn.style.opacity='.65';out.innerHTML='<div class="hint">Sending request to live API…</div>';try{const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();showResult(outId,{status:r.status,...data});if(!r.ok){const detail=Array.isArray(data.detail)?data.detail.map(x=>[x.loc?.slice(1).join('.')||'input',x.msg].join(': ')).join(' | '):(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail||data));throw Error(detail||'Request failed (HTTP '+r.status+')')}}catch(e){out.innerHTML='<pre></pre>';out.querySelector('pre').textContent='Request failed: '+e.message+'\nCheck API status or open the Swagger docs.'}finally{btn.disabled=false;btn.style.opacity='1'}}
+function predictFreight(){const amount=Number(document.getElementById('invoiceDollars').value);if(!Number.isFinite(amount)||amount<=0){showResult('predictOutput',{error:'Enter an invoice amount greater than zero.'});return}callApi('/predict-freight',{invoice_dollars:amount},'predictOutput','predictBtn')}
+function validateInvoice(){const expected=Number(document.getElementById('expectedTotal').value),actual=Number(document.getElementById('actualTotal').value),delay=Number(document.getElementById('receivingDelay').value);if([expected,actual,delay].some(v=>!Number.isFinite(v)||v<0)){showResult('validateOutput',{error:'Enter valid non-negative numbers.'});return}callApi('/validate-invoice',{invoice_dollars:actual,purchase_total_dollars:expected,average_receiving_delay_days:delay},'validateOutput','validateBtn')}
+function resetValidation(){setValue('expectedTotal',850);setValue('actualTotal',865);setValue('receivingDelay',4);document.getElementById('validateOutput').innerHTML='<div class="hint">Validation results will appear here.</div>'}
+loadHealth();
+</script></body></html>+Number(data.dollar_mismatch||0).toFixed(2),flagged?'warn':'ok');
+  }
+ }catch(e){
+  out.innerHTML='<pre></pre>';out.querySelector('pre').textContent='Request failed: '+e.message+'\nCheck API status or open the Swagger docs.';
+  recordActivity(endpoint,'ERROR',e.message,'warn');
+ }finally{btn.disabled=false;btn.style.opacity='1';}
+}
+function predictFreight(){
+ const amount=Number(document.getElementById('invoiceDollars').value);
+ if(!Number.isFinite(amount)||amount<=0){showResult('predictOutput',{error:'Enter an invoice amount greater than zero.'});return;}
+ callApi('/predict-freight',{invoice_dollars:amount},'predictOutput','predictBtn');
+}
+function validateInvoice(){
+ const expected=Number(document.getElementById('expectedTotal').value),actual=Number(document.getElementById('actualTotal').value),delay=Number(document.getElementById('receivingDelay').value);
+ if([expected,actual,delay].some(v=>!Number.isFinite(v)||v<0)){showResult('validateOutput',{error:'Enter valid non-negative numbers.'});return;}
+ callApi('/validate-invoice',{invoice_dollars:actual,purchase_total_dollars:expected,average_receiving_delay_days:delay},'validateOutput','validateBtn');
+}
+function resetValidation(){
+ setValue('expectedTotal',850);setValue('actualTotal',865);setValue('receivingDelay',4);
+ document.getElementById('validateOutput').innerHTML='<div class="hint">Validation results will appear here.</div>';
+}
+document.addEventListener('DOMContentLoaded',()=>{renderSessionMetrics();loadHealth();});
 </script></body></html>+Number(sessionMetrics.lastEstimate).toFixed(2);document.getElementById('lastEstimateNote').textContent=sessionMetrics.lastEstimate===null?'Run a prediction to populate':'Latest API estimate · demo data may be synthetic';document.getElementById('activityCount').textContent=sessionMetrics.events.length+' EVENTS';const body=document.getElementById('activityBody');if(!sessionMetrics.events.length){body.innerHTML='<div class="empty-state">No requests yet. Run a prediction or validate an invoice to see activity.</div>';return}const table=document.createElement('table');table.className='activity-table';table.innerHTML='<thead><tr><th>Endpoint</th><th>Result</th><th>Details</th><th>Time</th></tr></thead>';const tbody=document.createElement('tbody');sessionMetrics.events.forEach(e=>{const tr=document.createElement('tr');[e.endpoint,e.result,e.details,e.time].forEach((v,i)=>{const td=document.createElement('td');if(i===1){const badge=document.createElement('span');badge.className='status-badge '+(e.kind==='warn'?'warn':e.kind==='ok'?'ok':'info');badge.textContent=v;td.appendChild(badge)}else td.textContent=v;tr.appendChild(td)});tbody.appendChild(tr)});table.appendChild(tbody);body.replaceChildren(table)}
 function recordActivity(endpoint,result,details,kind='info'){sessionMetrics.events.unshift({endpoint,result,details,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}),kind});sessionMetrics.events=sessionMetrics.events.slice(0,8);sessionMetrics.requests++;renderSessionMetrics()}
 function clearActivity(){sessionMetrics.events=[];renderSessionMetrics()}
