@@ -30,15 +30,11 @@ app = FastAPI(
 # Permit the deployed portfolio frontend to call this API from the browser.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://stockwise-inventory-dashboard.onrender.com",
-        "https://stockwise-react-dashboard.onrender.com",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    # Public demo API: allow browser requests from the deployed portfolio frontend.
+    allow_origins=["*"],
     allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 model: RandomForestRegressor | None = None
