@@ -4,7 +4,7 @@ import {
   Activity, ArrowDownRight, ArrowRight, ArrowUpRight, Boxes, CheckCircle2,
   ChevronDown, CircleHelp, Clock3, Download, FileCheck2, Gauge,
   LayoutDashboard, Menu, Package, Search, Settings2, ShieldCheck,
-  Sparkles, Truck, X, Zap,
+  Sparkles, Truck, X, Zap, Play, Sun, Cuboid, ChartNoAxesCombined, FileWarning, Atom, Code2, Database, CircleCheck,
 } from 'lucide-react';
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis,
@@ -70,7 +70,7 @@ function ApiOutput({ result }) {
   );
 }
 
-export default function App() {
+function DashboardApp() {
   const [rows, setRows] = useState(initialRows);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All items');
@@ -229,4 +229,101 @@ export default function App() {
     {showAdd && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setShowAdd(false); }}><form className="modal" onSubmit={addItem}><div className="modal-heading"><div><div className="section-eyebrow">STOCK CONTROL</div><h2>Add inventory item</h2><p>Build out your sample catalogue.</p></div><button type="button" className="icon-btn" onClick={() => setShowAdd(false)} aria-label="Close dialog"><X size={17} /></button></div><label>Product name<input required maxLength="80" value={newItem.name} onChange={event => setNewItem({ ...newItem, name: event.target.value })} placeholder="e.g. Steel brackets" /></label><div className="two-fields"><label>SKU<input required maxLength="32" value={newItem.sku} onChange={event => setNewItem({ ...newItem, sku: event.target.value })} placeholder="ST-2001" /></label><label>Stock quantity<input type="number" min="0" step="1" value={newItem.stock} onChange={event => setNewItem({ ...newItem, stock: event.target.value })} placeholder="0" /></label></div><div className="two-fields"><label>Reorder point<input type="number" min="0" step="1" value={newItem.reorder} onChange={event => setNewItem({ ...newItem, reorder: event.target.value })} placeholder="100" /></label><label>Supplier<input maxLength="80" value={newItem.vendor} onChange={event => setNewItem({ ...newItem, vendor: event.target.value })} placeholder="Supplier name" /></label></div><div className="modal-actions"><button type="button" className="btn btn-ghost" onClick={() => setShowAdd(false)}>Cancel</button><button type="submit" className="btn btn-primary">Add to catalogue <ArrowRight size={15} /></button></div><p className="modal-note">Demo workspace only. Items are stored in this browser session, not a database.</p></form></div>}
     {toast && <div className="toast" role="status"><CheckCircle2 size={17} />{toast}</div>}
   </div>;
+}
+
+const WAREHOUSE_VIDEO = 'https://videos.pexels.com/video-files/32386624/32386624-hd_1920_1080_25fps.mp4';
+const FEATURE_CARDS = [
+  { title: 'Inventory Control', description: 'Know what is moving, what is running low, and what needs attention.', image: 'https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1000', icon: Boxes, tag: 'STOCK VISIBILITY' },
+  { title: 'Freight Cost Prediction', description: 'Estimate shipping cost from invoice value with the deployed model API.', image: 'https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=1000', icon: Truck, tag: 'MODEL INFERENCE' },
+  { title: 'Invoice Risk Screening', description: 'Surface invoice mismatch and receiving-delay rules for manual review.', image: 'https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg?auto=compress&cs=tinysrgb&w=1000', icon: FileWarning, tag: 'RULE-BASED CHECKS' },
+  { title: 'Interactive Analytics', description: 'Explore stock signals, summary metrics and trend visualizations.', image: 'https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg?auto=compress&cs=tinysrgb&w=1000', icon: ChartNoAxesCombined, tag: 'DECISION SUPPORT' },
+];
+
+function LandingPage({ onExplore }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [demoOpen, setDemoOpen] = useState(false);
+  const [apiHealth, setApiHealth] = useState('Checking');
+  const [healthData, setHealthData] = useState(null);
+  useEffect(() => {
+    let active = true;
+    fetch(`${API}/health`, { signal: AbortSignal.timeout(10000) })
+      .then(response => { if (!response.ok) throw new Error('API unavailable'); return response.json(); })
+      .then(data => { if (active) { setHealthData(data); setApiHealth(data.status === 'ok' ? 'API reachable' : 'Check API'); } })
+      .catch(() => { if (active) setApiHealth('Waking up'); });
+    return () => { active = false; };
+  }, []);
+  useEffect(() => {
+    if (!demoOpen) return undefined;
+    const onKey = event => { if (event.key === 'Escape') setDemoOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [demoOpen]);
+  const go = id => { setMenuOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); };
+  const inStock = 78, lowStock = 15, outStock = 7;
+  return <div className="landing">
+    <header className="landing-nav">
+      <a className="landing-brand" href="#home" onClick={e => { e.preventDefault(); go('home'); }} aria-label="Stockwise home"><span className="cube-logo"><Cuboid size={25}/></span><span>STOCK<span>WISE</span></span></a>
+      <button className="landing-mobile-toggle" onClick={() => setMenuOpen(v => !v)} aria-expanded={menuOpen} aria-label="Toggle navigation">{menuOpen ? <X/> : <Menu/>}</button>
+      <nav className={menuOpen ? 'landing-links open' : 'landing-links'} aria-label="Landing navigation">
+        <a className="active" href="#home" onClick={e => {e.preventDefault();go('home')}}>Home</a>
+        <a href="#features" onClick={e => {e.preventDefault();go('features')}}>Features</a>
+        <button onClick={() => {setMenuOpen(false);onExplore()}}>Dashboard</button>
+        <a href="#technology" onClick={e => {e.preventDefault();go('technology')}}>Technology</a>
+        <a href="#about" onClick={e => {e.preventDefault();go('about')}}>About</a>
+      </nav>
+      <div className="landing-nav-actions"><span className="api-mini"><i className={apiHealth==='API reachable'?'online':''}/>{apiHealth}</span><button className="landing-cta" onClick={onExplore}>Explore Dashboard <ArrowRight size={15}/></button></div>
+    </header>
+
+    <section className="landing-hero" id="home">
+      <div className="hero-video-wrap" aria-hidden="true">
+        <video className="hero-video" autoPlay muted loop playsInline preload="metadata" poster="https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1800">
+          <source src={WAREHOUSE_VIDEO} type="video/mp4"/>
+        </video>
+      </div>
+      <div className="hero-grid-overlay" aria-hidden="true"/>
+      <div className="hero-content">
+        <motion.div className="hero-copy" initial={{opacity:0,y:22}} animate={{opacity:1,y:0}} transition={{duration:.65}}>
+          <div className="hero-kicker"><span/> AI <b>·</b> INVENTORY <b>·</b> SUPPLY CHAIN</div>
+          <h1>Smarter <em>Inventory</em><br/>for a Bigger Tomorrow.</h1>
+          <p>Predict freight costs, monitor inventory health, and identify invoice anomalies with one intelligent supply-chain platform.</p>
+          <div className="hero-actions"><button className="hero-primary" onClick={onExplore}>Explore Dashboard <ArrowRight size={17}/></button><button className="hero-secondary" onClick={() => setDemoOpen(true)}><span><Play size={13} fill="currentColor"/></span> Watch Demo</button></div>
+          <div className="hero-proof"><div><b>3+</b><span>Analysis workflows</span></div><div><b>API</b><span>Live request testing</span></div><div><b>End-to-End</b><span>Supply-chain view</span></div></div>
+        </motion.div>
+        <motion.div className="hero-panels" initial={{opacity:0,x:26}} animate={{opacity:1,x:0}} transition={{duration:.8,delay:.15}}>
+          <div className="float-panel health-panel">
+            <div className="float-panel-title"><b>Inventory Health</b><span>ILLUSTRATIVE</span></div>
+            <div className="health-content"><div className="health-ring"><div><b>{inStock}%</b><small>In Stock</small></div></div><div className="health-legend"><div><i className="lime-dot"/><span>In Stock</span><b>{inStock}%</b></div><div><i className="amber-dot"/><span>Low Stock</span><b>{lowStock}%</b></div><div><i className="red-dot"/><span>Out of Stock</span><b>{outStock}%</b></div></div></div>
+          </div>
+          <div className="hero-panel-row">
+            <div className="float-panel freight-panel"><div className="float-panel-title"><b>Freight Cost Prediction</b><span>API TOOL</span></div><div className="freight-mock"><div className="freight-value"><small>Invoice input</small><b>$1,250</b><span>Try a real request below</span></div><svg viewBox="0 0 260 90" role="img" aria-label="Illustrative freight trend line"><defs><linearGradient id="heroLineFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#b8ff64" stopOpacity=".24"/><stop offset="100%" stopColor="#b8ff64" stopOpacity="0"/></linearGradient></defs><path d="M0 76 L24 62 L40 67 L62 43 L82 51 L102 29 L123 37 L145 18 L162 27 L184 13 L207 24 L230 7 L260 12 L260 90 L0 90Z" fill="url(#heroLineFill)"/><path d="M0 76 L24 62 L40 67 L62 43 L82 51 L102 29 L123 37 L145 18 L162 27 L184 13 L207 24 L230 7 L260 12" fill="none" stroke="#b8ff64" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/></svg></div><div className="panel-footnote">Trend graphic is illustrative, not model output.</div></div>
+            <div className="float-panel invoice-panel"><div className="float-panel-title"><b>Invoice Risk Scan</b><span>RULES</span></div><div className="invoice-alert"><FileWarning size={27}/><div><b>Rule-based review</b><small>Mismatch + delay checks</small></div></div><div className="invoice-mini-row"><span>Invoice total</span><b>Compare</b></div><div className="invoice-mini-row"><span>Receiving delay</span><b>Screen</b></div><button onClick={onExplore}>Open workbench <ArrowRight size={13}/></button></div>
+          </div>
+          <div className="hero-panel-caption"><span className="caption-dot"/> Sample interface preview <span>·</span> Demo values are labelled</div>
+        </motion.div>
+      </div>
+      <button className="scroll-cue" onClick={() => go('features')} aria-label="Scroll to features"><span/> Scroll to explore</button>
+    </section>
+
+    <section className="tech-strip" id="technology"><div className="tech-strip-label">BUILT WITH THE PROJECT'S TECHNOLOGY</div><div className="tech-items"><div><Atom/><span>React</span></div><div><Code2/><span>Python</span></div><div><Activity/><span>FastAPI</span></div><div><Database/><span>SQLite / pandas</span></div><div><ChartNoAxesCombined/><span>scikit-learn</span></div><div><Boxes/><span>Recharts</span></div></div></section>
+
+    <section className="feature-section" id="features"><div className="section-heading"><div><span className="section-tag">CAPABILITIES / 01—04</span><h2>Every signal.<br/><em>One clear picture.</em></h2></div><p>From inventory visibility to invoice-level checks, Stockwise brings the project's tools into one focused workspace.</p></div>
+      <div className="feature-grid">{FEATURE_CARDS.map((feature,index)=>{const Icon=feature.icon;return <motion.article className="feature-card" key={feature.title} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.42,delay:index*.07}}><div className="feature-image"><img src={feature.image} alt="" loading="lazy"/><span className="feature-image-shade"/><span className="feature-index">0{index+1}</span><span className="feature-icon"><Icon size={21}/></span></div><div className="feature-copy"><span className="feature-tag">{feature.tag}</span><h3>{feature.title}</h3><p>{feature.description}</p><button onClick={onExplore}>Explore capability <ArrowRight size={14}/></button></div></motion.article>})}</div>
+    </section>
+
+    <section className="about-section" id="about"><div className="about-orbit" aria-hidden="true"><div/><div/><div/><GlobeIcon/></div><div className="about-copy"><span className="section-tag">↗ WHY STOCKWISE</span><h2>AI-powered supply-chain <em>intelligence.</em></h2><p>Connect inventory signals, freight-cost estimation, and invoice screening in one accessible demo platform. Move from a raw number to a more informed next step.</p><div className="about-pills"><span><CircleCheck size={15}/> Clear data provenance</span><span><CircleCheck size={15}/> Transparent demo limits</span><span><CircleCheck size={15}/> Real API requests</span></div></div></section>
+
+    <section className="workflow-section"><div className="section-tag">HOW IT WORKS</div><h2>From signal to next step.</h2><div className="workflow-grid"><div><span>01</span><b>Inspect</b><p>Review illustrative stock health and item-level signals.</p></div><div><span>02</span><b>Estimate</b><p>Send invoice value to the deployed freight endpoint.</p></div><div><span>03</span><b>Screen</b><p>Check invoice mismatch and receiving delay with transparent rules.</p></div><div><span>04</span><b>Act</b><p>Use the result to guide a human review—not automate decisions blindly.</p></div></div></section>
+
+    <section className="landing-bottom-cta"><div><span className="section-tag">YOUR OPERATIONS WORKSPACE</span><h2>Make the next move <em>with clarity.</em></h2><p>Open the interactive dashboard to search sample inventory, export a CSV, and test the live API tools.</p></div><button className="hero-primary" onClick={onExplore}>Explore Dashboard <ArrowRight size={17}/></button></section>
+    <footer className="landing-footer"><a className="landing-brand" href="#home" onClick={e=>{e.preventDefault();go('home')}}><span className="cube-logo"><Cuboid size={23}/></span><span>STOCK<span>WISE</span></span></a><p>Inventory & Vendor Intelligence · Demo environment</p><div><a href="https://github.com/Corvus06655/inventory-ml-engineering" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={13}/></a><a href={`${API}/docs`} target="_blank" rel="noreferrer">API Docs <ArrowUpRight size={13}/></a><span>API: {apiHealth}{healthData?.data_mode ? ` · ${healthData.data_mode} mode` : ''}</span></div></footer>
+
+    {demoOpen && <div className="demo-modal-backdrop" role="presentation" onMouseDown={event=>{if(event.target===event.currentTarget)setDemoOpen(false)}}><section className="demo-modal" role="dialog" aria-modal="true" aria-labelledby="demo-title"><button className="demo-modal-close" onClick={()=>setDemoOpen(false)} aria-label="Close demo"><X/></button><div className="demo-modal-video"><video autoPlay muted loop playsInline controls poster="https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1400"><source src={WAREHOUSE_VIDEO} type="video/mp4"/></video></div><div className="demo-modal-copy"><span className="section-tag">STOCKWISE / WALKTHROUGH</span><h2 id="demo-title">See the supply chain in motion.</h2><p>This is warehouse footage, not a recorded product walkthrough. Explore the dashboard for real API interactions and sample inventory tools.</p><button className="hero-primary" onClick={()=>{setDemoOpen(false);onExplore()}}>Open interactive dashboard <ArrowRight size={16}/></button></div></section></div>}
+  </div>;
+}
+function GlobeIcon(){return <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" strokeOpacity=".6"/><ellipse cx="60" cy="60" rx="22" ry="48" fill="none" stroke="currentColor" strokeOpacity=".45"/><ellipse cx="60" cy="60" rx="48" ry="18" fill="none" stroke="currentColor" strokeOpacity=".45"/><path d="M14 60h92M22 38h76M22 82h76" fill="none" stroke="currentColor" strokeOpacity=".45"/></svg>}
+
+export default function App() {
+  const [showDashboard,setShowDashboard] = useState(false);
+  useEffect(()=>{document.title=showDashboard?'Stockwise — Interactive Dashboard':'Stockwise — AI Supply Chain Intelligence';window.scrollTo({top:0,behavior:'instant'});},[showDashboard]);
+  return showDashboard ? <DashboardApp/> : <LandingPage onExplore={()=>{setShowDashboard(true);window.scrollTo({top:0,behavior:'instant'});}}/>;
 }
