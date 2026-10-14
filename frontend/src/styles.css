@@ -41,3 +41,8 @@
 @keyframes outputIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:540px){.output-primary strong{font-size:25px}.output-head{padding:11px}.output-facts{padding-left:11px;padding-right:11px}.ambient-video video{opacity:.12}}
 @media(prefers-reduced-motion:reduce){.ambient-video video{display:none}.api-output{animation:none}}
+
+/* Ensure the ambient video sits behind the app, not behind the page canvas. */
+.ambient-video{z-index:0}
+.main-area{position:relative;z-index:1}
+.sidebar{z-index:30}
