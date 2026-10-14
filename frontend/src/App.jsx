@@ -4,7 +4,7 @@ import {
   Activity, ArrowDownRight, ArrowRight, ArrowUpRight, Boxes, CheckCircle2,
   ChevronDown, CircleHelp, Clock3, Download, FileCheck2, Gauge,
   LayoutDashboard, Menu, Package, Search, Settings2, ShieldCheck,
-  Sparkles, Truck, X, Zap, Play, Sun, Cuboid, ChartNoAxesCombined, FileWarning, Atom, Code2, Database, CircleCheck,
+  Sparkles, Truck, X, Zap, Play, Sun, Cuboid, ChartNoAxesCombined, FileWarning, Atom, Code2, Database, CircleCheck, Home,
 } from 'lucide-react';
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis,
@@ -70,7 +70,7 @@ function ApiOutput({ result }) {
   );
 }
 
-function DashboardApp() {
+function DashboardApp({ onBack }) {
   const [rows, setRows] = useState(initialRows);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All items');
@@ -181,7 +181,7 @@ function DashboardApp() {
     {mobileNav && <button className="mobile-backdrop" onClick={() => setMobileNav(false)} aria-label="Close navigation" />}
 
     <main className="main-area">
-      <header className="topbar"><div className="topbar-start"><button className="mobile-menu icon-btn" onClick={() => setMobileNav(true)} aria-label="Open menu"><Menu size={19} /></button><div className="breadcrumbs">Workspace <span>/</span> <b>{activeNav}</b></div></div><div className="topbar-right"><label className="search-global"><Search size={15} /><input aria-label="Search inventory" placeholder="Search inventory..." value={query} onChange={event => setQuery(event.target.value)} /><kbd>⌘ K</kbd></label><button className="icon-btn help-btn" title="Help" aria-label="Help" onClick={() => notify('Use the live workbench to test API predictions.')}><CircleHelp size={18} /></button><div className="avatar top-avatar" title="Stockwise demo">S</div></div></header>
+      <header className="topbar"><div className="topbar-start"><button className="btn btn-ghost dashboard-home-btn" onClick={onBack} title="Return to Stockwise home"><Home size={15}/> Home</button><button className="mobile-menu icon-btn" onClick={() => setMobileNav(true)} aria-label="Open menu"><Menu size={19} /></button><div className="breadcrumbs">Workspace <span>/</span> <b>{activeNav}</b></div></div><div className="topbar-right"><label className="search-global"><Search size={15} /><input aria-label="Search inventory" placeholder="Search inventory..." value={query} onChange={event => setQuery(event.target.value)} /><kbd>⌘ K</kbd></label><button className="icon-btn help-btn" title="Help" aria-label="Help" onClick={() => notify('Use the live workbench to test API predictions.')}><CircleHelp size={18} /></button><div className="avatar top-avatar" title="Stockwise demo">S</div></div></header>
 
       <div className="page-wrap">
         <section className="welcome-row"><div><div className="eyebrow"><span className="pulse-dot" /> OPERATIONS SNAPSHOT <span className="eyebrow-divider">/</span> {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</div><h1>Good morning.<br /><span>Here's your stock, at a glance.</span></h1><p>A clearer read on inventory health, supplier risk, and what needs attention next.</p></div><div className="welcome-actions"><button className="btn btn-ghost" onClick={refreshApi} disabled={apiStatus === 'Connecting'}><Activity size={15} />{apiStatus === 'Connecting' ? 'Checking…' : 'Refresh status'}</button><button className="btn btn-primary" onClick={() => setShowAdd(true)}><Package size={15} />Add inventory</button></div></section>
@@ -325,5 +325,5 @@ function GlobeIcon(){return <svg viewBox="0 0 120 120" aria-hidden="true"><circl
 export default function App() {
   const [showDashboard,setShowDashboard] = useState(false);
   useEffect(()=>{document.title=showDashboard?'Stockwise — Interactive Dashboard':'Stockwise — AI Supply Chain Intelligence';window.scrollTo({top:0,behavior:'instant'});},[showDashboard]);
-  return showDashboard ? <DashboardApp/> : <LandingPage onExplore={()=>{setShowDashboard(true);window.scrollTo({top:0,behavior:'instant'});}}/>;
+  return showDashboard ? <DashboardApp onBack={()=>{setShowDashboard(false);window.scrollTo({top:0,behavior:'instant'});}}/> : <LandingPage onExplore={()=>{setShowDashboard(true);window.scrollTo({top:0,behavior:'instant'});}}/>;
 }
