@@ -160,8 +160,51 @@ a,button,input{cursor:pointer}
 @media(max-width:600px){body{cursor:auto}.hero h1{font-size:clamp(42px,12vw,62px)!important}.result-grid{grid-template-columns:1fr}.result-shell{padding:14px}.form-actions{display:grid;grid-template-columns:1fr 1fr}.hero-actions .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){.hero .status-card,.chart .bar{animation:none!important}}
 
+
+/* CINEMATIC STEEL — charcoal, electric blue and signal orange */
+:root{color-scheme:dark;--bg:#080b10;--panel:#111821;--line:rgba(74,151,255,.24);--muted:#a8b5c7;--text:#f4f8ff;--blue:#278dff;--mint:#ff9b45;--amber:#ff9b45;--violet:#5cb8ff}
+html{background:#080b10}
+body{background:#080b10!important;color:#f4f8ff!important}
+body:before{z-index:-2!important;background:linear-gradient(115deg,rgba(8,11,16,.1),rgba(14,43,74,.18),rgba(8,11,16,.1));background-size:240% 100%;animation:steelDrift 18s ease-in-out infinite alternate}
+@keyframes steelDrift{from{background-position:0% 50%}to{background-position:100% 50%}}
+#cinematicVideo{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;pointer-events:none;opacity:.28;filter:saturate(.72) contrast(1.12)}
+.video-shade{position:fixed;inset:0;z-index:-2;pointer-events:none;background:linear-gradient(115deg,rgba(5,8,13,.94) 0%,rgba(6,12,22,.78) 52%,rgba(5,8,13,.91) 100%),radial-gradient(ellipse at 80% 15%,rgba(39,141,255,.16),transparent 38%),linear-gradient(0deg,#080b10 0%,transparent 45%,rgba(8,11,16,.25))}
+#motionCanvas{opacity:.42!important}
+.cursor-glow{background:radial-gradient(circle,rgba(39,141,255,.22) 0,rgba(255,155,69,.07) 36%,transparent 70%)!important}
+.ambient-orb{background:#278dff!important;opacity:.22!important}.ambient-orb.second{background:#ff8a3d!important;opacity:.14!important}
+.nav{border-color:rgba(83,157,255,.27)!important;background:rgba(8,13,21,.82)!important;box-shadow:0 18px 60px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.05)!important}
+.logo{background:linear-gradient(135deg,#278dff,#83d2ff 65%,#ff9b45)!important;color:#06101d!important;box-shadow:0 0 30px rgba(39,141,255,.25)!important}
+.eyebrow,.panel-kicker{color:#65b8ff!important}
+.hero{background:linear-gradient(125deg,rgba(13,22,35,.86),rgba(8,13,21,.72) 62%,rgba(20,25,31,.72))!important;border-color:rgba(74,151,255,.24)!important;box-shadow:0 30px 100px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.05)!important}
+.hero:before{background:radial-gradient(ellipse at 85% 15%,rgba(39,141,255,.20),transparent 38%),radial-gradient(ellipse at 65% 80%,rgba(255,155,69,.10),transparent 35%),linear-gradient(110deg,transparent 35%,rgba(255,255,255,.035) 50%,transparent 65%)!important;background-size:auto,auto,220% 100%!important}
+.gradient-text,.hero h1 .gradient-text{background:linear-gradient(105deg,#f4f8ff 0%,#65b8ff 42%,#ffad63 78%,#f4f8ff 100%)!important;background-size:220% auto!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+.hero h1 span span{background:linear-gradient(105deg,#65b8ff,#ffad63)!important;-webkit-background-clip:text!important;background-clip:text!important}
+.panel,.chart-panel,.insight-panel,.activity-panel,.feature,.status-card,.metric{border-color:rgba(86,151,225,.2)!important;background:linear-gradient(145deg,rgba(17,25,36,.92),rgba(8,13,21,.94))!important;box-shadow:0 18px 60px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.035)!important}
+.panel:hover,.chart-panel:hover,.insight-panel:hover,.activity-panel:hover,.feature:hover,.status-card:hover,.metric:hover{border-color:rgba(39,141,255,.48)!important;box-shadow:0 28px 75px rgba(0,0,0,.38),0 0 30px rgba(39,141,255,.08)!important}
+.pill,.linkbtn{border-color:rgba(95,151,220,.22)!important;background:rgba(12,20,31,.82)!important;color:#d4dfef!important}
+.linkbtn:hover{border-color:#278dff!important;background:#12243a!important}
+.primary,.btn.primary{background:linear-gradient(110deg,#278dff,#61b8ff 68%,#ff9b45)!important;color:#06101b!important;box-shadow:0 8px 30px rgba(39,141,255,.22)!important}
+.secondary,.btn.secondary{background:rgba(20,29,41,.9)!important;border:1px solid rgba(95,151,220,.28)!important;color:#e7f1ff!important}
+.field input,.field select,.field textarea{background:rgba(5,9,15,.88)!important;border-color:rgba(95,151,220,.28)!important;color:#f4f8ff!important}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#278dff!important;box-shadow:0 0 0 4px rgba(39,141,255,.15)!important}
+.output{background:rgba(5,9,15,.94)!important;border-color:rgba(39,141,255,.25)!important}
+.output pre{color:#bfe1ff!important}
+.result-state{color:#8bd0ff!important;background:#102b44!important;border-color:#278dff44!important}
+.result-item{background:#ffffff04!important;border-color:#ffffff12!important}
+.result-json summary{color:#ffb36e!important}
+.bar{background:linear-gradient(180deg,#65b8ff,#1674e7)!important;box-shadow:0 0 18px rgba(39,141,255,.24)!important}
+.bar.alt{background:linear-gradient(180deg,#ffc17d,#e87524)!important;box-shadow:0 0 18px rgba(255,155,69,.18)!important}
+.insight{background:rgba(7,13,21,.8)!important;border-color:rgba(86,151,225,.18)!important}
+.status-badge.ok{color:#9bd7ff!important;background:rgba(39,141,255,.16)!important}
+.status-badge.warn{color:#ffc18b!important;background:rgba(255,137,54,.16)!important}
+.live-pulse{background:#65b8ff!important;box-shadow:0 0 0 0 rgba(39,141,255,.55)!important}
+@keyframes pulseLive{70%{box-shadow:0 0 0 10px rgba(39,141,255,0)!important}100%{box-shadow:0 0 0 0 rgba(39,141,255,0)!important}}
+::selection{background:rgba(39,141,255,.4);color:#fff}
+@media(max-width:680px){#cinematicVideo{opacity:.16}.video-shade{background:linear-gradient(115deg,rgba(5,8,13,.96),rgba(6,12,22,.87),rgba(5,8,13,.95))}.hero{background:rgba(9,15,24,.9)!important}}
+@media(prefers-reduced-motion:reduce){body:before{animation:none!important}#cinematicVideo{display:none!important}}
+
 </style></head>
-<body><div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div><div class="ambient-orb" aria-hidden="true"></div><div class="ambient-orb second" aria-hidden="true"></div><div class="shell">
+<body><video id="cinematicVideo" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_25fps.mp4" type="video/mp4"></video><div class="video-shade" aria-hidden="true"></div><div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div><div class="ambient-orb" aria-hidden="true"></div><div class="ambient-orb second" aria-hidden="true"></div><div class="shell">
 <header class="nav"><div class="brand"><div class="logo">S</div><div>STOCKWISE <span style="color:var(--muted);font-weight:500">/ Intelligence</span></div></div><div class="navlinks"><span class="pill"><span class="dot" id="statusDot"></span><span id="statusText">Checking API…</span></span><a class="linkbtn" href="#analytics">Analytics ↓</a><a class="linkbtn" href="#activity">Activity ↓</a><a class="linkbtn" href="https://github.com/Corvus06655/inventory-ml-engineering" target="_blank" rel="noreferrer">GitHub ↗</a><a class="linkbtn" href="https://inventory-ml-engineering-api.onrender.com/docs" target="_blank" rel="noreferrer">API Docs ↗</a></div></header>
 <section class="hero"><div><div class="eyebrow">Inventory & vendor intelligence</div><h1><span class="gradient-text">Turn invoice data into <span>clearer decisions.</span></span></h1><p>A live, API-powered workspace for freight-cost estimation and invoice screening. Explore how a lightweight ML service and business rules can turn operational inputs into clearer signals.</p><div class="hero-actions"><a class="btn primary" href="#workbench">Try the live demo ↓</a><a class="btn secondary" href="https://inventory-ml-engineering-api.onrender.com/docs" target="_blank" rel="noreferrer">Explore API docs ↗</a></div></div><aside class="status-card"><div class="status-top"><span>LIVE SERVICE MONITOR</span><span>● <span id="monitorLabel">Connecting</span></span></div><div class="big-status" id="healthTitle">Checking service…</div><div class="sub" id="healthSub">Connecting to the deployed FastAPI backend</div><div class="statusline"><div id="healthBar"></div></div><div class="status-top"><span>Backend</span><strong>FastAPI · Python</strong></div><div class="status-top" style="margin-top:10px"><span>ML estimator</span><strong>Random Forest</strong></div><div class="status-top" style="margin-top:10px"><span>Validation</span><strong>Rule-based screening</strong></div></aside></section>
 <div class="mini-grid"><div class="metric"><div class="label">API architecture</div><div class="value">REST</div><div class="foot">Interactive endpoints</div></div><div class="metric"><div class="label">Freight estimation</div><div class="value">ML model</div><div class="foot">Random Forest regressor</div></div><div class="metric"><div class="label">Invoice checks</div><div class="value">Rule engine</div><div class="foot">Variance & receiving delay</div></div></div>
