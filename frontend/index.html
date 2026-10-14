@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020">
+<meta name="theme-color" content="#080612">
 <title>Stockwise | Inventory Intelligence Platform</title>
 <style>
 :root{color-scheme:dark;--bg:#080d18;--panel:#111a2c;--line:#273650;--muted:#a1b0c9;--text:#f5f7ff;--blue:#8ba8ff;--mint:#70e3c2;--amber:#ffd08a;--violet:#a99aff}
@@ -58,6 +58,49 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 ::selection{background:rgba(141,242,210,.28);color:#fff}
 @media(max-width:680px){.hero{padding:30px 22px!important;border-radius:24px!important;margin-top:18px!important}.hero h1{font-size:clamp(46px,13vw,70px)!important}.cursor-glow{display:none!important}}
 
+
+/* NEON AURORA REDESIGN — full palette + visible motion */
+:root{color-scheme:dark;--bg:#080612;--panel:#151025;--line:rgba(196,164,255,.24);--muted:#b7afce;--text:#fffaff;--blue:#a78bfa;--mint:#5efce8;--amber:#ffcb6b;--violet:#e879f9}
+html{background:#080612}
+body{background:radial-gradient(ellipse at 14% 12%,rgba(124,58,237,.32),transparent 34%),radial-gradient(ellipse at 88% 30%,rgba(6,182,212,.20),transparent 32%),radial-gradient(ellipse at 50% 100%,rgba(217,70,239,.13),transparent 36%),#080612!important;color:#fffaff}
+body:before{z-index:-2!important;background:linear-gradient(115deg,transparent 0%,rgba(167,139,250,.07) 45%,transparent 60%);background-size:240% 100%;animation:auroraDrift 16s ease-in-out infinite alternate}
+@keyframes auroraDrift{from{background-position:0% 50%;filter:hue-rotate(0deg)}to{background-position:100% 50%;filter:hue-rotate(35deg)}}
+#motionCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;opacity:.75}
+.nav{border:1px solid rgba(192,132,252,.3)!important;background:rgba(13,8,27,.78)!important;box-shadow:0 15px 50px rgba(0,0,0,.3),0 0 35px rgba(139,92,246,.08)!important}
+.logo{background:linear-gradient(135deg,#c084fc,#67e8f9 58%,#5efce8)!important;box-shadow:0 0 28px rgba(192,132,252,.28)!important}
+.eyebrow,.panel-kicker{color:#67f7e3!important}
+.hero{border:1px solid rgba(192,132,252,.36)!important;background:linear-gradient(135deg,rgba(33,20,58,.88),rgba(9,15,32,.82) 58%,rgba(7,40,47,.68))!important;box-shadow:0 35px 120px rgba(124,58,237,.15),inset 0 1px rgba(255,255,255,.1)!important}
+.hero:before{background:radial-gradient(circle at 82% 28%,rgba(217,70,239,.2),transparent 27%),radial-gradient(circle at 68% 70%,rgba(34,211,238,.16),transparent 32%),linear-gradient(110deg,transparent 35%,rgba(255,255,255,.045) 50%,transparent 65%)!important;background-size:auto,auto,220% 100%!important}
+.hero h1 .gradient-text,.gradient-text{background:linear-gradient(100deg,#fff 0%,#c4b5fd 25%,#67e8f9 55%,#f0abfc 78%,#fff 100%)!important;background-size:260% auto!important;animation:neonShine 6s linear infinite!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+@keyframes neonShine{to{background-position:260% center}}
+.primary{background:linear-gradient(110deg,#c084fc,#818cf8 48%,#22d3ee)!important;color:#10091f!important;box-shadow:0 8px 30px rgba(168,85,247,.28)!important}
+.secondary,.linkbtn{background:rgba(29,21,50,.82)!important;border-color:rgba(192,132,252,.3)!important;color:#eee7ff!important}
+.linkbtn:hover,.secondary:hover{border-color:#67e8f9!important;box-shadow:0 0 25px rgba(34,211,238,.12)!important}
+.pill,.tiny-tag{border-color:rgba(192,132,252,.28)!important;background:rgba(34,22,57,.72)!important;color:#e5dcff!important}
+.status-card,.metric,.panel,.chart-panel,.insight-panel,.activity-panel,.feature{background:linear-gradient(145deg,rgba(28,20,48,.94),rgba(12,15,32,.94))!important;border-color:rgba(192,132,252,.2)!important;box-shadow:0 18px 65px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.045)!important}
+.metric:after{background:rgba(217,70,239,.22)!important;filter:blur(4px)}
+.metric .foot{color:#67f7e3!important}
+.feature .ico{background:linear-gradient(135deg,rgba(192,132,252,.22),rgba(34,211,238,.13))!important;color:#67e8f9!important;border:1px solid rgba(192,132,252,.2)}
+.panel:hover,.chart-panel:hover,.insight-panel:hover,.activity-panel:hover,.feature:hover,.status-card:hover{border-color:rgba(103,232,249,.65)!important;box-shadow:0 25px 75px rgba(124,58,237,.17),0 0 24px rgba(34,211,238,.06)!important}
+.field input{background:rgba(7,8,21,.86)!important;border-color:rgba(192,132,252,.28)!important}
+.field input:focus{border-color:#67e8f9!important;box-shadow:0 0 0 4px rgba(34,211,238,.13)!important}
+.output{background:rgba(5,9,22,.92)!important;border-color:rgba(34,211,238,.25)!important}
+.output pre{color:#a5fff1!important}
+.bar{background:linear-gradient(180deg,#c084fc,#7c3aed)!important;box-shadow:0 0 18px rgba(192,132,252,.22)}
+.bar.alt{background:linear-gradient(180deg,#67e8f9,#0d9488)!important;box-shadow:0 0 18px rgba(34,211,238,.2)}
+.insight{background:rgba(8,11,26,.76)!important;border-color:rgba(192,132,252,.2)!important}
+.status-badge.ok{color:#67f7e3!important;background:rgba(13,148,136,.18)!important}
+.status-badge.warn{color:#ffcb6b!important;background:rgba(217,119,6,.17)!important}
+.live-pulse{background:#67f7e3!important;box-shadow:0 0 0 0 rgba(103,247,227,.55)!important}
+@keyframes pulseLive{70%{box-shadow:0 0 0 10px rgba(103,247,227,0)!important}100%{box-shadow:0 0 0 0 rgba(103,247,227,0)!important}}
+.reveal{filter:blur(4px);transition:opacity .8s ease,transform .8s cubic-bezier(.16,1,.3,1),filter .8s ease!important}
+.reveal.is-visible{filter:blur(0)}
+.hero .btn,.hero .linkbtn,.btn{position:relative;overflow:hidden}
+.btn:after{content:"";position:absolute;inset:-120% auto -120% -35%;width:22%;transform:rotate(18deg);background:rgba(255,255,255,.22);filter:blur(8px);transition:left .65s ease;left:-45%}
+.btn:hover:after{left:130%}
+::selection{background:rgba(192,132,252,.45);color:white}
+@media(prefers-reduced-motion:reduce){body:before,.gradient-text,.hero h1 .gradient-text{animation:none!important}#motionCanvas{display:none}}
+
 </style></head>
 <body><div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div><div class="ambient-orb" aria-hidden="true"></div><div class="ambient-orb second" aria-hidden="true"></div><div class="shell">
 <header class="nav"><div class="brand"><div class="logo">S</div><div>STOCKWISE <span style="color:var(--muted);font-weight:500">/ Intelligence</span></div></div><div class="navlinks"><span class="pill"><span class="dot" id="statusDot"></span><span id="statusText">Checking API…</span></span><a class="linkbtn" href="#analytics">Analytics ↓</a><a class="linkbtn" href="#activity">Activity ↓</a><a class="linkbtn" href="https://github.com/Corvus06655/inventory-ml-engineering" target="_blank" rel="noreferrer">GitHub ↗</a><a class="linkbtn" href="https://inventory-ml-engineering-api.onrender.com/docs" target="_blank" rel="noreferrer">API Docs ↗</a></div></header>
@@ -112,6 +155,19 @@ function enablePremiumMotion(){
  const status=document.getElementById('statusText');
  if(status && !status.querySelector('.live-pulse'))status.insertAdjacentHTML('afterbegin','<span class="live-pulse"></span>');
 }
+
+
+/* Live particle field: animated, pointer-reactive, no external libraries */
+(function initLiveMotion(){
+ if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const canvas=document.createElement('canvas');canvas.id='motionCanvas';canvas.setAttribute('aria-hidden','true');document.body.prepend(canvas);
+ const ctx=canvas.getContext('2d');if(!ctx)return;
+ let w=0,h=0,dpr=1,particles=[],mouse={x:-1000,y:-1000},raf=0;
+ function resize(){dpr=Math.min(window.devicePixelRatio||1,2);w=window.innerWidth;h=window.innerHeight;canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);const n=Math.min(100,Math.max(38,Math.floor(w*h/15000)));particles=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.8+.6,phase:Math.random()*6.28}));}
+ function move(e){mouse.x=e.clientX;mouse.y=e.clientY}
+ function draw(t){ctx.clearRect(0,0,w,h);for(let i=0;i<particles.length;i++){const p=particles[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;const dx=mouse.x-p.x,dy=mouse.y-p.y,dist=Math.hypot(dx,dy);if(dist<145&&dist>0){p.x-=dx/dist*.12;p.y-=dy/dist*.12;}const alpha=.35+.35*Math.sin(t*.001+p.phase);ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=i%3===0?'rgba(103,232,249,'+alpha+')':i%3===1?'rgba(192,132,252,'+alpha+')':'rgba(240,171,252,'+alpha+')';ctx.fill();for(let j=i+1;j<particles.length;j++){const q=particles[j],dd=Math.hypot(q.x-p.x,q.y-p.y);if(dd<105){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle='rgba(167,139,250,'+((1-dd/105)*.18)+')';ctx.lineWidth=.7;ctx.stroke();}}}raf=requestAnimationFrame(draw);}
+ resize();addEventListener('resize',resize,{passive:true});addEventListener('pointermove',move,{passive:true});document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelAnimationFrame(raf);else raf=requestAnimationFrame(draw)});raf=requestAnimationFrame(draw);
+})();
 
 </script>
 </body></html>
