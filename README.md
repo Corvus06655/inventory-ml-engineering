@@ -108,7 +108,20 @@ npm install
 npm run dev
 ```
 
-Vite will print the local development URL (usually http://localhost:5173). The frontend uses the deployed API by default; update the `API` constant in `frontend/src/App.jsx` if you want it to call a local backend.
+Vite will print the local development URL (usually http://localhost:5173). The frontend uses the deployed API by default. To use a local or alternate API, create `frontend/.env.local` with `VITE_API_URL=http://127.0.0.1:8000` (see `frontend/.env.example`).
+
+### Render frontend deployment
+
+The dashboard is a Render **Static Site** and the API remains the Python web service described in `render.yaml`. The existing `stockwise-react-dashboard` service deploys from `main` on each commit. Its current Render settings are:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | Repository root (unset) |
+| Build command | `cd frontend && npm install && npm run build` |
+| Publish directory | `frontend/dist` |
+| Optional environment variable | `VITE_API_URL` to override the API host |
+
+`VITE_API_URL` is optional because the deployed API URL is the frontend default. Set it in Render if you use another API host; Vite reads it at build time. These verified service settings are also represented in `render.yaml` so the existing static site can be managed with the project Blueprint. The API's health endpoint is `/health`.
 
 ## Original analysis
 
