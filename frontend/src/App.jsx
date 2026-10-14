@@ -163,7 +163,8 @@ function DashboardApp({ onBack }) {
   };
 
   const exportCsv = () => {
-    const csv = ['SKU,Product,Category,Stock,Reorder point,Vendor,Status', ...filtered.map(row => [row.sku, row.name, row.category, row.stock, row.reorder, row.vendor, row.status].map(value => `"${String(value).replaceAll('"', '""')}"`).join(','))].join('\n');
+    const csv = ['SKU,Product,Category,Stock,Reorder point,Vendor,Status', ...filtered.map(row => [row.sku, row.name, row.category, row.stock, row.reorder, row.vendor, row.status].map(value => `"${String(value).replaceAll('"', '""')}"`).join(','))].join('
+');
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
@@ -226,12 +227,15 @@ function DashboardApp({ onBack }) {
           <div className="surface tool-card" id="invoice-tool"><div className="tool-title"><span className="tool-icon orange"><FileCheck2 size={18} /></span><div><h3>Invoice screening</h3><p>Check totals and receiving delay.</p></div></div><div className="two-fields"><label>Expected total <span className="field-unit">USD</span><input type="number" min="0" max="1000000000" step="0.01" value={invoice.expected} onChange={event => setInvoice({ ...invoice, expected: event.target.value })} /></label><label>Actual total <span className="field-unit">USD</span><input type="number" min="0" max="1000000000" step="0.01" value={invoice.actual} onChange={event => setInvoice({ ...invoice, actual: event.target.value })} /></label></div><label>Receiving delay <span className="field-unit">DAYS</span><input type="number" min="0" max="36500" step="1" value={invoice.delay} onChange={event => setInvoice({ ...invoice, delay: event.target.value })} /></label><button className="btn btn-primary full-btn" disabled={busy || !invoice.expected || !invoice.actual || !invoice.delay} onClick={() => runPrediction('invoice')}>{busy ? 'Checking invoice…' : 'Screen this invoice'}<ArrowRight size={15} /></button>{result?.kind === 'invoice' && <ApiOutput result={result} />}</div>
         </div><p className="workbench-disclaimer"><ShieldCheck size={14} /> Demo only: freight results may use synthetic training data. Invoice flags are review signals, not proof of fraud.</p></section>
 
-        <section className="dashboard-info-grid"><article className="surface dashboard-info-card" id="dashboard-technology"><div className="section-eyebrow">TECHNOLOGY STACK</div><h2>Built with modern tools.</h2><p>Stockwise combines a React interface, Python API, model inference, and interactive visualizations.</p><div className="dashboard-tech-pills"><span><Atom size={14}/> React</span><span><Code2 size={14}/> Python</span><span><Activity size={14}/> FastAPI</span><span><Database size={14}/> Data tools</span><span><ChartNoAxesCombined size={14}/> Recharts</span></div></article><article className="surface dashboard-info-card" id="dashboard-about"><div className="section-eyebrow">ABOUT STOCKWISE</div><h2>Inventory signals into decisions.</h2><p>Explore sample stock, test deployed API endpoints, and review transparent demo outputs. Sample inventory edits stay in this browser session.</p><button className="btn btn-secondary" onClick={onBack}><Home size={14}/> Back to Stockwise home</button></article></section>\n\n    <footer className="footer"><div className="footer-brand"><div className="brand-mark"><Boxes size={15} /></div><b>stockwise</b><span>Inventory intelligence, made actionable.</span></div><div><a href="https://github.com/Corvus06655/inventory-ml-engineering" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={12} /></a><a href={`${API}/docs`} target="_blank" rel="noreferrer">API docs <ArrowUpRight size={12} /></a><span>© {new Date().getFullYear()} Stockwise</span></div></footer>
+        <section className="dashboard-info-grid"><article className="surface dashboard-info-card" id="dashboard-technology"><div className="section-eyebrow">TECHNOLOGY STACK</div><h2>Built with modern tools.</h2><p>Stockwise combines a React interface, Python API, model inference, and interactive visualizations.</p><div className="dashboard-tech-pills"><span><Atom size={14}/> React</span><span><Code2 size={14}/> Python</span><span><Activity size={14}/> FastAPI</span><span><Database size={14}/> Data tools</span><span><ChartNoAxesCombined size={14}/> Recharts</span></div></article><article className="surface dashboard-info-card" id="dashboard-about"><div className="section-eyebrow">ABOUT STOCKWISE</div><h2>Inventory signals into decisions.</h2><p>Explore sample stock, test deployed API endpoints, and review transparent demo outputs. Sample inventory edits stay in this browser session.</p><button className="btn btn-secondary" onClick={onBack}><Home size={14}/> Back to Stockwise home</button></article></section>
+
+    <footer className="footer"><div className="footer-brand"><div className="brand-mark"><Boxes size={15} /></div><b>stockwise</b><span>Inventory intelligence, made actionable.</span></div><div><a href="https://github.com/Corvus06655/inventory-ml-engineering" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={12} /></a><a href={`${API}/docs`} target="_blank" rel="noreferrer">API docs <ArrowUpRight size={12} /></a><span>© {new Date().getFullYear()} Stockwise</span></div></footer>
       </div>
     </main>
 
     {showAdd && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setShowAdd(false); }}><form className="modal" onSubmit={addItem}><div className="modal-heading"><div><div className="section-eyebrow">STOCK CONTROL</div><h2>Add inventory item</h2><p>Build out your sample catalogue.</p></div><button type="button" className="icon-btn" onClick={() => setShowAdd(false)} aria-label="Close dialog"><X size={17} /></button></div><label>Product name<input required maxLength="80" value={newItem.name} onChange={event => setNewItem({ ...newItem, name: event.target.value })} placeholder="e.g. Steel brackets" /></label><div className="two-fields"><label>SKU<input required maxLength="32" value={newItem.sku} onChange={event => setNewItem({ ...newItem, sku: event.target.value })} placeholder="ST-2001" /></label><label>Stock quantity<input type="number" min="0" step="1" value={newItem.stock} onChange={event => setNewItem({ ...newItem, stock: event.target.value })} placeholder="0" /></label></div><div className="two-fields"><label>Reorder point<input type="number" min="0" step="1" value={newItem.reorder} onChange={event => setNewItem({ ...newItem, reorder: event.target.value })} placeholder="100" /></label><label>Supplier<input maxLength="80" value={newItem.vendor} onChange={event => setNewItem({ ...newItem, vendor: event.target.value })} placeholder="Supplier name" /></label></div><div className="modal-actions"><button type="button" className="btn btn-ghost" onClick={() => setShowAdd(false)}>Cancel</button><button type="submit" className="btn btn-primary">Add to catalogue <ArrowRight size={15} /></button></div><p className="modal-note">Demo workspace only. Items are stored in this browser session, not a database.</p></form></div>}
-    <button className="floating-home-btn" onClick={onBack} aria-label="Back to Stockwise home" title="Back to Stockwise home"><Home size={17}/><span>Home</span></button>\n    {toast && <div className="toast" role="status"><CheckCircle2 size={17} />{toast}</div>}
+    <button className="floating-home-btn" onClick={onBack} aria-label="Back to Stockwise home" title="Back to Stockwise home"><Home size={17}/><span>Home</span></button>
+    {toast && <div className="toast" role="status"><CheckCircle2 size={17} />{toast}</div>}
   </div>;
 }
 
@@ -245,6 +249,7 @@ const FEATURE_CARDS = [
 
 function LandingPage({ onExplore }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
   const [apiHealth, setApiHealth] = useState('Checking');
   const [healthData, setHealthData] = useState(null);
@@ -280,7 +285,7 @@ function LandingPage({ onExplore }) {
 
     <section className="landing-hero" id="home">
       <div className="hero-video-wrap" aria-hidden="true">
-        <video className="hero-video" autoPlay muted loop playsInline preload="metadata" poster="https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1800">
+        <video className={`hero-video ${videoFailed ? "video-failed" : ""}`} autoPlay muted loop playsInline preload="metadata" poster="https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1800" onError={() => setVideoFailed(true)}>
           <source src={WAREHOUSE_VIDEO} type="video/mp4"/>
         </video>
       </div>
@@ -327,7 +332,25 @@ function LandingPage({ onExplore }) {
 function GlobeIcon(){return <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" strokeOpacity=".6"/><ellipse cx="60" cy="60" rx="22" ry="48" fill="none" stroke="currentColor" strokeOpacity=".45"/><ellipse cx="60" cy="60" rx="48" ry="18" fill="none" stroke="currentColor" strokeOpacity=".45"/><path d="M14 60h92M22 38h76M22 82h76" fill="none" stroke="currentColor" strokeOpacity=".45"/></svg>}
 
 export default function App() {
-  const [showDashboard,setShowDashboard] = useState(false);
-  useEffect(()=>{document.title=showDashboard?'Stockwise — Interactive Dashboard':'Stockwise — AI Supply Chain Intelligence';window.scrollTo({top:0,behavior:'instant'});},[showDashboard]);
-  return showDashboard ? <DashboardApp onBack={()=>{setShowDashboard(false);window.scrollTo({top:0,behavior:'instant'});}}/> : <LandingPage onExplore={()=>{setShowDashboard(true);window.scrollTo({top:0,behavior:'instant'});}}/>;
+  const [showDashboard,setShowDashboard] = useState(() => window.history.state?.stockwiseDashboard === true);
+  useEffect(() => {
+    document.title = showDashboard ? 'Stockwise — Interactive Dashboard' : 'Stockwise — AI Supply Chain Intelligence';
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [showDashboard]);
+  useEffect(() => {
+    const handlePopState = event => setShowDashboard(event.state?.stockwiseDashboard === true);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+  const goHome = () => {
+    window.history.pushState({ stockwiseDashboard: false }, '', window.location.pathname);
+    setShowDashboard(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  const goDashboard = () => {
+    window.history.pushState({ stockwiseDashboard: true }, '', window.location.pathname);
+    setShowDashboard(true);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  return showDashboard ? <DashboardApp onBack={goHome}/> : <LandingPage onExplore={goDashboard}/>;
 }
