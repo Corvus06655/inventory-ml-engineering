@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from sklearn.ensemble import RandomForestRegressor
 
 ROOT = Path(__file__).resolve().parent
@@ -93,8 +93,14 @@ class FreightPredictionResponse(BaseModel):
 
 
 class InvoiceCheckRequest(BaseModel):
-    invoice_dollars: float = Field(ge=0, le=1_000_000_000)
-    purchase_total_dollars: float = Field(ge=0, le=1_000_000_000)
+    invoice_dollars: float = Field(
+        ge=0, le=1_000_000_000,
+        validation_alias=AliasChoices("invoice_dollars", "actual_total"),
+    )
+    purchase_total_dollars: float = Field(
+        ge=0, le=1_000_000_000,
+        validation_alias=AliasChoices("purchase_total_dollars", "expected_total"),
+    )
     average_receiving_delay_days: float = Field(ge=0, le=36500)
 
 
