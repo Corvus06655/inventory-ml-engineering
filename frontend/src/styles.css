@@ -552,7 +552,7 @@ html:has(.landing), body:has(.landing), body:has(.landing) #root { background:#0
 .dashboard-tech-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .dashboard-tech-pills span{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid #b8ff6428;border-radius:8px;background:#b8ff6409;color:var(--text-primary,#e7eee8);font-size:11px}
 .dashboard-tech-pills svg{color:#b8ff64}
-.topbar-start .dashboard-home-btn{display:none}
+.topbar-start .dashboard-home-btn{display:inline-flex!important;align-items:center;gap:7px;white-space:nowrap;min-height:36px;padding:0 12px;margin-right:12px;border:1px solid #b8ff6455;border-radius:9px;background:#132016;color:#caff9e;font-weight:700;flex-shrink:0}.topbar-start .dashboard-home-btn:hover{background:#203321;color:#e1ffc7}
 @media(max-width:900px){.floating-home-btn{right:15px;bottom:15px;min-height:43px;padding:0 14px}.dashboard-info-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.floating-home-btn{right:12px;bottom:12px;min-height:42px;padding:0 13px}.floating-home-btn span{display:inline}.dashboard-info-card{padding:18px}}
 
@@ -671,3 +671,5 @@ body{background:radial-gradient(ellipse at 80% 0%,rgba(54,220,200,.055),transpar
 
 
 .hero-video-wrap:has(.video-failed){background-image:url('https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=1800');background-position:center;background-size:cover}
+
+@media(max-width:560px){.topbar-start .dashboard-home-btn{display:inline-flex!important;min-height:32px;padding:0 8px;margin-right:6px;font-size:11px}.breadcrumbs{font-size:11px}}
