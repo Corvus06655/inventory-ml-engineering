@@ -555,3 +555,116 @@ html:has(.landing), body:has(.landing), body:has(.landing) #root { background:#0
 .topbar-start .dashboard-home-btn{display:none}
 @media(max-width:900px){.floating-home-btn{right:15px;bottom:15px;min-height:43px;padding:0 14px}.dashboard-info-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.floating-home-btn{right:12px;bottom:12px;min-height:42px;padding:0 13px}.floating-home-btn span{display:inline}.dashboard-info-card{padding:18px}}
+
+
+/* StockWise AI command-centre theme — dashboard surfaces */
+:root{color-scheme:dark;--ink:#edf5ef;--navy:#0a1411;--muted:#9aaba1;--line:rgba(188,218,199,.14);--surface:#0d1512;--canvas:#050807;--violet:#b8ff64;--green:#b8ff64;--amber:#f3bd61;--rose:#ff7777}
+html,body,#root{background:#050807;color:#edf5ef}
+body{background:radial-gradient(ellipse at 80% 0%,rgba(54,220,200,.055),transparent 35%),#050807;color:#edf5ef}
+.app-shell{background:#050807;color:#edf5ef}
+.sidebar{background:linear-gradient(180deg,#0b1712,#08100e);border-right:1px solid rgba(184,255,100,.14);color:#eaf3ec}
+.brand-copy b,.profile-copy b{color:#f4f8f4}
+.brand-mark{background:linear-gradient(145deg,#c8ff91,#62c85e);color:#061007;box-shadow:0 0 25px #b8ff6422}
+.workspace-label,.sidebar-footnote,.profile-copy small,.sidebar-note p{color:#8fa398}
+.workspace-label span{border-color:#3a5940;color:#b8ff64;background:#102015}
+.nav-item{color:#a9b9ae}
+.nav-item:hover,.nav-item.active{background:linear-gradient(90deg,rgba(184,255,100,.13),rgba(184,255,100,.035));color:#d7ffb1}
+.nav-item.active{border-left-color:#b8ff64}
+.nav-count{background:#14251a;color:#caff9e}
+.sidebar-note{background:linear-gradient(145deg,#122019,#0d1712);border-color:#294331}
+.sidebar-note b{color:#edf6ed}
+.note-mark{color:#b8ff64;background:#1b3020}
+.main-area{background:transparent}
+.topbar{background:rgba(5,11,8,.92);border-bottom:1px solid rgba(184,255,100,.12);backdrop-filter:blur(18px)}
+.breadcrumbs,.breadcrumbs span{color:#7f9387}.breadcrumbs b{color:#e7f1e8}
+.search-global,.search-table{background:#0b1310;border-color:#28392d;color:#94a89a}
+.search-global input,.search-table input{color:#f2f7f2}
+.search-global input::placeholder,.search-table input::placeholder{color:#65796b}
+.search-global kbd,.icon-btn,.btn-ghost{background:#0e1712;border-color:#2b3e30;color:#c5d2c8}
+.icon-btn:hover,.btn-ghost:hover{background:#17251a;color:#d4ffad}
+.page-wrap{color:#eaf3ec}
+.eyebrow,.section-eyebrow,.workbench-heading .section-eyebrow{color:#a9d68a}
+.welcome-row h1{color:#f4f8f4}
+.welcome-row h1 span,.welcome-row p,.section-title p,.workbench-heading p{color:#9eafa3}
+.surface,.metric-card,.chart-surface,.insight-surface,.service-surface,.inventory-surface,.tool-card,.dashboard-info-card{background:linear-gradient(145deg,rgba(17,27,21,.97),rgba(9,16,12,.98));border-color:rgba(184,255,100,.14);box-shadow:0 14px 36px rgba(0,0,0,.13)}
+.metric-card{color:#f0f7f0}
+.metric-top,.metric-foot,.metric-foot>span:last-child{color:#91a397}
+.metric-value{color:#f4f8f4}
+.metric-icon.violet,.metric-icon.blue,.metric-icon.amber,.metric-icon.rose{background:#17271b;color:#b8ff64}
+.metric-change.positive,.trend{color:#b8ff64}
+.metric-change.attention{color:#f3bd61}
+.metric-spark i{background:#b8ff64}
+.api-banner{background:#16160f;border-color:#5c4827;color:#f2d9a5}
+.api-banner small{color:#b6a17a}
+.api-banner.api-good{background:#0d1d12;border-color:#2c5735;color:#caffaa}
+.api-banner.api-good small{color:#9bc99c}
+.api-banner a{color:#d6f6bd}
+.section-title h2,.workbench-heading h2,.dashboard-info-card h2{color:#f0f7f0}
+.chart-period{background:#101a13;border-color:#2a3b2d;color:#a9b9ad}
+.chart-summary b{color:#f2f7f2}.chart-summary span{color:#91a397}
+.chart-legend,.chart-demo{color:#8fa195}
+.chart-legend>span:first-child i{background:#b8ff64}
+.insight-row{color:#e7f0e8;border-color:#27372b}
+.insight-row:hover{background:#122017}
+.insight-copy small,.insight-note{color:#9aab9e}
+.insight-symbol.warning,.insight-symbol.danger{background:#211d10;color:#f3bd61}
+.insight-symbol.danger{background:#271514;color:#ff7777}
+.insight-note{background:#111c13;border-color:#263b29}
+.service-head b,.service-stats b{color:#e8f1e9}.service-head small,.service-stats small{color:#8fa194}
+.service-icon{background:#17271b;color:#b8ff64}
+.service-link{color:#b8ff64}
+.inventory-head h2{color:#f2f7f2}
+.table-count{background:#17261b;color:#c7fba7}
+.table-toolbar{border-color:#29382d}
+.filter-pills button{background:#0b130e;border-color:#29382d;color:#9eafa3}
+.filter-pills button.selected{background:#b8ff64;border-color:#b8ff64;color:#071007}
+.table-scroll table{color:#dce9de}
+.table-scroll th{background:#0b130e;color:#829588;border-color:#28372b}
+.table-scroll td{border-color:#1f2d22}
+.table-scroll tbody tr:hover{background:#101c14}
+.product-meta b,.cost-cell,.stock-cell>b{color:#e8f1e9}
+.product-meta small,.reorder-copy,.vendor-cell{color:#8fa194}
+.product-thumb{background:#15231a;color:#c5fa9c}
+.stock-track{background:#1b2a1f}
+.stock-good{background:#b8ff64}.stock-low{background:#f3bd61}.stock-none{background:#ff7777}
+.status-healthy{background:#10251a;color:#b8ff8d;border-color:#284a2c}
+.status-low-stock{background:#2a2110;color:#f5cb77;border-color:#5a4420}
+.status-out-of-stock{background:#2a1515;color:#ff9a9a;border-color:#5b2929}
+.row-action{background:#111d14;border-color:#2c402f;color:#b8ff64}
+.row-action:hover{background:#1b2d1d}
+.table-footer{border-color:#27372b;color:#8fa194}
+.table-footer b{color:#eaf3ec}
+.workbench-section{background:radial-gradient(ellipse at 12% 10%,rgba(184,255,100,.045),transparent 36%),transparent}
+.workbench-chip{background:#112016;border-color:#2a432c;color:#c8f9a8}
+.tool-title h3{color:#f1f7f1}.tool-title p,.tool-card label{color:#9daf9f}
+.tool-icon.purple,.tool-icon.orange{background:#19281d;color:#b8ff64}
+.tool-card input,.modal input{background:#080f0b;border-color:#2a3b2d;color:#f1f7f1}
+.tool-card input:focus,.modal input:focus{border-color:#b8ff64;box-shadow:0 0 0 3px #b8ff6418}
+.btn-primary,.full-btn{background:#b8ff64;border-color:#b8ff64;color:#091108}
+.btn-primary:hover,.full-btn:hover{background:#caff8b;border-color:#caff8b}
+.btn-secondary{background:#101a13;border-color:#304734;color:#c9f7ac}
+.btn-secondary:hover{background:#18271b}
+.api-output{background:#0a120d;border-color:#2b4030;color:#e5efe6}
+.output-success{border-color:#2f6940}.output-error{border-color:#70403a}
+.output-head b,.output-primary strong,.output-facts b{color:#edf5ee}
+.output-head small,.output-primary small,.output-primary span,.output-facts small,.output-note{color:#94a89a}
+.output-primary{background:#101e13;border-color:#29452d}
+.output-facts>div{background:#0d1710;border-color:#27382b}
+.raw-response{border-color:#283a2d;color:#c3d3c5}
+.raw-response pre{color:#b7c9b9}
+.workbench-disclaimer{color:#8fa194}
+.dashboard-info-grid{margin-top:24px}
+.dashboard-info-card p{color:#9aab9e}
+.dashboard-tech-pills span{background:#0f1a12;border-color:#293f2b;color:#d8e8d8}
+.dashboard-tech-pills svg{color:#b8ff64}
+.footer{border-color:#26372a;color:#87998c}
+.footer-brand b{color:#edf5ee}.footer-brand span,.footer a{color:#a5b5a8}
+.modal-backdrop{background:#020604bd}
+.modal{background:#0d1711;border-color:#304333;color:#eaf3ec}
+.modal-heading h2{color:#f0f7f0}.modal-heading p,.modal-note{color:#93a596}
+.toast{background:#102217;border-color:#2c5737;color:#c9ffb0}
+.floating-home-btn{background:#b8ff64!important;border-color:#b8ff64!important;color:#071007!important;box-shadow:0 8px 28px #0008,0 0 24px #b8ff6426!important}
+.no-results{color:#a0b2a4}
+.video-failed{display:none}
+@media(max-width:800px){.sidebar{background:#09120d}.topbar{background:rgba(5,11,8,.97)}}
+@media(prefers-reduced-motion:reduce){.hero-video{display:none}}
