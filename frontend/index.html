@@ -164,11 +164,11 @@ a,button,input{cursor:pointer}
 /* CINEMATIC STEEL — charcoal, electric blue and signal orange */
 :root{color-scheme:dark;--bg:#080b10;--panel:#111821;--line:rgba(74,151,255,.24);--muted:#a8b5c7;--text:#f4f8ff;--blue:#278dff;--mint:#ff9b45;--amber:#ff9b45;--violet:#5cb8ff}
 html{background:#080b10}
-body{background:#080b10!important;color:#f4f8ff!important}
+html{background:#080b10!important}body{background:transparent!important;color:#f4f8ff!important;isolation:isolate}
 body:before{z-index:-2!important;background:linear-gradient(115deg,rgba(8,11,16,.1),rgba(14,43,74,.18),rgba(8,11,16,.1));background-size:240% 100%;animation:steelDrift 18s ease-in-out infinite alternate}
 @keyframes steelDrift{from{background-position:0% 50%}to{background-position:100% 50%}}
-#cinematicVideo{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;pointer-events:none;opacity:.28;filter:saturate(.72) contrast(1.12)}
-.video-shade{position:fixed;inset:0;z-index:-2;pointer-events:none;background:linear-gradient(115deg,rgba(5,8,13,.94) 0%,rgba(6,12,22,.78) 52%,rgba(5,8,13,.91) 100%),radial-gradient(ellipse at 80% 15%,rgba(39,141,255,.16),transparent 38%),linear-gradient(0deg,#080b10 0%,transparent 45%,rgba(8,11,16,.25))}
+#cinematicVideo{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;pointer-events:none;opacity:.34;filter:saturate(.82) contrast(1.12);background:#080b10}
+.video-shade{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(115deg,rgba(5,8,13,.94) 0%,rgba(6,12,22,.78) 52%,rgba(5,8,13,.91) 100%),radial-gradient(ellipse at 80% 15%,rgba(39,141,255,.16),transparent 38%),linear-gradient(0deg,#080b10 0%,transparent 45%,rgba(8,11,16,.25))}
 #motionCanvas{opacity:.42!important}
 .cursor-glow{background:radial-gradient(circle,rgba(39,141,255,.22) 0,rgba(255,155,69,.07) 36%,transparent 70%)!important}
 .ambient-orb{background:#278dff!important;opacity:.22!important}.ambient-orb.second{background:#ff8a3d!important;opacity:.14!important}
