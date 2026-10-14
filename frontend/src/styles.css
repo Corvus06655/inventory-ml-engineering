@@ -539,3 +539,19 @@ html:has(.landing), body:has(.landing), body:has(.landing) #root { background:#0
 .dashboard-home-btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;min-height:34px;padding:0 11px;margin-right:10px;font-size:11px}
 .topbar-start{display:flex;align-items:center;min-width:0}
 @media(max-width:780px){.dashboard-home-btn{min-height:32px;padding:0 8px;margin-right:5px;font-size:10px}.topbar-start{gap:5px}}
+
+
+/* Always-available navigation and the additional reference-page sections. */
+.floating-home-btn{position:fixed;right:22px;bottom:22px;z-index:80;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:45px;padding:0 17px;border:1px solid #b8ff64;border-radius:999px;background:#b8ff64;color:#071006;font-size:12px;font-weight:800;box-shadow:0 8px 28px #0007,0 0 24px #b8ff6426;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.floating-home-btn:hover{transform:translateY(-3px);box-shadow:0 12px 32px #0008,0 0 30px #b8ff6440}
+#inventory,#analytics,#workbench,#freight-tool,#invoice-tool,#dashboard-technology,#dashboard-about{scroll-margin-top:90px}
+.dashboard-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:22px}
+.dashboard-info-card{padding:24px;min-width:0}
+.dashboard-info-card h2{margin:8px 0 10px;font-size:20px;letter-spacing:-.5px;color:var(--text-primary,#f5f7f5)}
+.dashboard-info-card p{max-width:600px;color:var(--text-muted,#aab8b0);font-size:12px;line-height:1.75}
+.dashboard-tech-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.dashboard-tech-pills span{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid #b8ff6428;border-radius:8px;background:#b8ff6409;color:var(--text-primary,#e7eee8);font-size:11px}
+.dashboard-tech-pills svg{color:#b8ff64}
+.topbar-start .dashboard-home-btn{display:none}
+@media(max-width:900px){.floating-home-btn{right:15px;bottom:15px;min-height:43px;padding:0 14px}.dashboard-info-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.floating-home-btn{right:12px;bottom:12px;min-height:42px;padding:0 13px}.floating-home-btn span{display:inline}.dashboard-info-card{padding:18px}}
