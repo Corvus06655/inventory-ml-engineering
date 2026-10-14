@@ -1,65 +1,66 @@
-# Inventory & Vendor Intelligence
+# Stockwise — Inventory & Vendor Intelligence
 
-A data analytics and machine learning project built around inventory purchases, vendor invoices and freight costs using Python, SQL, Pandas and scikit-learn. It includes a Streamlit interface and a FastAPI service for freight-cost estimation and rule-based invoice screening.
+> **Turn invoice data into clearer decisions.**
 
-## Project capabilities
+A full-stack inventory and vendor intelligence demo combining a React dashboard with a FastAPI service for freight-cost estimation and rule-based invoice screening.
 
-| Area | Approach | Evaluation / rule |
+<p align="center">
+  <a href="https://stockwise-react-dashboard.onrender.com/"><strong>🚀 Open the Live Stockwise Dashboard</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://inventory-ml-engineering-api.onrender.com/docs">API Swagger Docs</a>
+  &nbsp; · &nbsp;
+  <a href="https://inventory-ml-engineering-api.onrender.com/health">API Health</a>
+</p>
+
+## Live links
+
+| Resource | Link |
+| --- | --- |
+| **Live React dashboard** | https://stockwise-react-dashboard.onrender.com/ |
+| FastAPI interactive docs | https://inventory-ml-engineering-api.onrender.com/docs |
+| API health endpoint | https://inventory-ml-engineering-api.onrender.com/health |
+| GitHub repository | https://github.com/Corvus06655/inventory-ml-engineering |
+
+## What you can explore
+
+- **Inventory overview:** stock levels, low-stock and out-of-stock signals, vendor summaries and trend visualizations.
+- **Inventory table:** search and filter demo items, add an item to the current browser session, and export visible data as CSV.
+- **Freight estimator:** send a live request to the deployed FastAPI endpoint using an invoice amount.
+- **Invoice screening:** evaluate invoice totals and receiving-delay signals using the project's deterministic business rules.
+- **API transparency:** inspect structured results and expand the raw JSON response when needed.
+- **Responsive UI:** dashboard layout adapts to desktop and mobile screens.
+
+> **Demo-data notice:** Dashboard inventory rows and trend charts are illustrative demo data. Inventory edits are session-only and are not saved to a persistent database. The freight API may run in synthetic-data demo mode; if so, the returned estimate is illustrative only and must not be used for real purchasing decisions. Check the API response and `/health` endpoint for the active mode.
+
+## Architecture
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | React, Vite, Recharts, Framer Motion, Lucide |
+| API | FastAPI, Pydantic |
+| Modeling / analysis | Python, Pandas, scikit-learn |
+| Deployment | Render |
+| Version control | GitHub |
+
+## API endpoints
+
+| Method | Endpoint | Purpose |
 | --- | --- | --- |
-| Freight cost prediction | Linear Regression, Decision Tree, Random Forest in the original analysis | MAE, RMSE and R² on an 80/20 train-test split |
-| Invoice flagging | SQL-derived business rules | Dollar mismatch > 5 or average receiving delay > 10 days |
-| REST API | FastAPI + Pydantic validation | Interactive OpenAPI docs at `/docs` |
-
-> **Results integrity:** The repository does not claim ExtraTrees, Isolation Forest, or a chronological holdout for the original project workflow. The numbers `R² = 0.984`, `MAE = 44.22`, and `RMSE = 108.74` should not be presented as verified results.
->
-> The invoice flag is a rule-based screening signal, not independent fraud ground truth. A flag is not proof of fraud.
-
-## Freight cost prediction
-
-The original notebook compares Linear Regression, Decision Tree Regressor and Random Forest Regressor. The target is `Freight`, with `Dollars` as the main predictive input. The notebook evaluates models using MAE, RMSE and R² with an 80/20 train-test split.
-
-## Invoice flagging
-
-The invoice workflow combines purchase-level aggregates with vendor invoices using SQL. It flags an invoice when the absolute difference between invoice dollars and the associated purchase total exceeds 5, or when average receiving delay exceeds 10 days. These rules prioritize records for review; they do not establish fraud.
-
-## Live API (FastAPI)
-
-The API exposes two workflows:
-
-- `POST /predict-freight` — estimates freight from invoice value.
-- `POST /validate-invoice` — checks invoice-total mismatch and receiving delay against the project's rules.
-- `GET /health` — reports service/model status and whether the API is using the local database or demo data.
-- `GET /` — basic service information.
-
-### Run locally
-
-Use Python 3.10 or newer (recommended).
-
-```bash
-python -m venv .venv
-# Windows:
-.venv\\Scripts\\activate
-# macOS/Linux:
-# source .venv/bin/activate
-
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) to try the endpoints interactively. Health status is available at [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health).
+| GET | `/health` | API/model status and data mode |
+| GET | `/` | Basic service information |
+| POST | `/predict-freight` | Estimate freight from invoice value |
+| POST | `/validate-invoice` | Check invoice mismatch and receiving delay |
 
 ### Example requests
 
-Freight prediction:
-
+**Freight prediction**
 ```json
 {
   "invoice_dollars": 18500
 }
 ```
 
-Invoice screening:
-
+**Invoice screening**
 ```json
 {
   "invoice_dollars": 10000,
@@ -68,46 +69,73 @@ Invoice screening:
 }
 ```
 
-### Data and deployment notes
+Try the endpoints using the interactive [Swagger UI](https://inventory-ml-engineering-api.onrender.com/docs).
 
-- If a compatible `inventory.db` file is present at the repository root and contains at least 10 valid `vendor_invoice` rows with `Dollars` and `Freight`, the API trains its freight estimator from that data at startup.
-- The database is intentionally not committed because of its size. If it is absent, the API uses reproducible **synthetic demo data** so the service can still start. In demo mode, freight estimates are illustrative only and must not be used for real purchasing decisions.
-- The API fits a lightweight Random Forest on startup for demonstration. It is not a saved, independently validated production model. Validate generalization, units, and business suitability before operational use.
-- Invoice validation is deterministic business-rule logic and does not require a database.
-- No real database or credentials are required for the public demo.
+## Run locally
 
-### Deploy to Render
+Use Python 3.10+ and Node.js 18+.
 
-This repository includes `render.yaml` for a basic Render web service configuration. Connect the GitHub repository in Render and deploy using the detected Blueprint configuration. After deployment, use the service's `/docs` URL to test it.
-
-The public deployment uses synthetic data unless you separately configure access to a compatible database. Do not upload confidential vendor or invoice data to a public demo service.
-
-## Streamlit app
-
-`streamlit_app.py` provides the interactive project view, including freight-model comparison and invoice flag analysis. The public app starts in demo mode so the large local database is not required.
-
-Run locally:
+### 1. Start the FastAPI backend
 
 ```bash
-streamlit run streamlit_app.py
+python -m venv .venv
 ```
 
-The app can optionally accept the full `inventory.db` file through its sidebar uploader.
+Windows:
+```powershell
+.venv\Scripts\activate
+```
+
+macOS/Linux:
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies and start the API:
+```bash
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+API docs: http://127.0.0.1:8000/docs
+
+### 2. Start the React frontend
+
+Open a second terminal:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Vite will print the local development URL (usually http://localhost:5173). The frontend uses the deployed API by default; update the `API` constant in `frontend/src/App.jsx` if you want it to call a local backend.
+
+## Original analysis
+
+The repository also contains notebooks and a Streamlit app for freight-model comparison and invoice flag analysis.
+
+- Freight analysis compares Linear Regression, Decision Tree and Random Forest models using MAE, RMSE and R² on an 80/20 train-test split.
+- Invoice screening uses business rules: absolute invoice-versus-purchase mismatch greater than 5, or average receiving delay greater than 10 days.
+- A rule-based flag is a review signal, not proof of fraud.
+- The repository does not claim the previously mentioned R², MAE or RMSE values as verified results.
 
 ## Repository structure
 
 ```text
 inventory-ml-engineering/
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── styles.css
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
 ├── notebook/
 │   ├── Freight Prediction.ipynb
 │   └── invoice flagging.ipynb
 ├── freight_cost_prediction/
-│   ├── data_preprocessing.py
-│   └── model_evaluation.py
 ├── invoice_flagging/
-│   ├── data_preprocessing.py
-│   ├── modeling_evaluation.py
-│   └── train.py
 ├── main.py
 ├── render.yaml
 ├── streamlit_app.py
@@ -115,6 +143,15 @@ inventory-ml-engineering/
 └── README.md
 ```
 
-## Reproducibility
+## Limitations and responsible use
 
-Dependencies are listed in `requirements.txt`. The full project database is intentionally not committed to GitHub because of its size. Place `inventory.db` at the project root for the API/notebooks to use the complete data workflow, or use the built-in synthetic demo mode to explore the API without private or large data files.
+- The public demo may use synthetic data because the full local database is not committed.
+- The displayed inventory rows and trend chart are sample/demo values; they are not evidence of a live warehouse feed.
+- Frontend inventory changes are not persisted.
+- Freight predictions from synthetic training data are for demonstration only.
+- Invoice flags help prioritize manual review; they do not establish fraud.
+- Do not submit confidential vendor, purchase, or invoice information to the public demo.
+
+---
+
+**Live app:** https://stockwise-react-dashboard.onrender.com/
