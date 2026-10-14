@@ -11,6 +11,7 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from sklearn.ensemble import RandomForestRegressor
 
@@ -24,6 +25,15 @@ app = FastAPI(
         "When inventory.db is unavailable, the freight model uses synthetic demo data."
     ),
     version="1.0.0",
+)
+
+# Permit the deployed portfolio frontend to call this API from the browser.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://stockwise-inventory-dashboard.onrender.com"],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
 
 model: RandomForestRegressor | None = None
