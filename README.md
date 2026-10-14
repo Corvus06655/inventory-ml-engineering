@@ -21,6 +21,22 @@ A full-stack inventory and vendor intelligence demo combining a React dashboard 
 | API health endpoint | https://inventory-ml-engineering-api.onrender.com/health |
 | GitHub repository | https://github.com/Corvus06655/inventory-ml-engineering |
 
+## Product sections
+
+The React app is organized as a cinematic landing page plus a dedicated interactive dashboard workspace:
+
+1. **Home / Landing** — warehouse video with poster fallback, live API reachability indicator, project overview and dashboard CTA.
+2. **Dashboard Overview** — sample inventory KPIs, throughput chart, priority queue and API status.
+3. **Inventory Management** — searchable/filterable sample catalogue, session-only add/restock actions, and CSV export.
+4. **Freight Cost Prediction** — sends the entered invoice amount to the real `POST /predict-freight` endpoint.
+5. **Invoice Risk Screening** — sends expected/actual totals and receiving delay to the real `POST /validate-invoice` endpoint.
+6. **Analytics & Reports** — clearly labelled illustrative trend visualizations and stock summaries.
+7. **Technology / How It Works** — explains the actual React, Vite, FastAPI, Python, pandas and scikit-learn stack.
+8. **About StockWise** — project purpose, demo limitations and human-review framing.
+9. **CTA / Footer** — links to the live dashboard, repository and API documentation.
+
+**Navigation:** The floating lime **Home** control remains available inside the dashboard. The browser Back/Forward buttons also switch between the landing page and dashboard.
+
 ## What you can explore
 
 - **Inventory overview:** stock levels, low-stock and out-of-stock signals, vendor summaries and trend visualizations.
