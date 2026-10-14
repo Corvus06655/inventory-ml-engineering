@@ -46,3 +46,58 @@
 .ambient-video{z-index:0}
 .main-area{position:relative;z-index:1}
 .sidebar{z-index:30}
+
+
+/* STOCKWISE / Field Console — distinctive industrial editorial redesign */
+:root{font-family:'DM Sans',sans-serif;color:#f1f0e9;background:#0b0d0c;--bg:#0b0d0c;--surface:#121614;--surface2:#191e1a;--line:#2a332c;--muted:#929b91;--text:#f1f0e9;--purple:#d5ff55;--green:#d5ff55;--orange:#ff9a67}
+body{background:#0b0d0c;color:#f1f0e9}
+.app-shell{background:radial-gradient(ellipse at 70% -10%,#283320 0%,transparent 37%),#0b0d0c}
+.sidebar{background:#0d100e;border-right:1px solid #283029;padding:27px 16px 18px}
+.brand-mark{border-radius:8px;background:#d5ff55;color:#11160e;box-shadow:0 0 28px #d5ff551c}
+.brand b{font-size:20px;letter-spacing:-1.1px}.brand small{color:#889285;letter-spacing:1.5px}
+.workspace-label,.section-eyebrow{color:#9ca693;letter-spacing:2px}
+.nav-item{border-radius:7px;color:#a3aaa0;padding:12px 13px}
+.nav-item.active{background:#d5ff5512;color:#e4ff9e;box-shadow:inset 3px 0 #d5ff55}
+.nav-item:hover{background:#1a211a;color:#fff}
+.topbar{background:#0b0d0ce8;border-bottom:1px solid #252d26;backdrop-filter:blur(18px)}
+.main-area{background:transparent}
+.welcome-row{padding-top:12px}
+.welcome-row h1,.page-title h1{font-family:Manrope,sans-serif;font-weight:700;letter-spacing:-1.7px}
+.welcome-row h1{font-size:clamp(30px,3.6vw,47px);max-width:700px;line-height:1.08}
+.welcome-row h1 span,.accent-text{color:#d5ff55}
+.section-eyebrow:before{content:"";display:inline-block;width:18px;height:2px;background:#d5ff55;vertical-align:middle;margin-right:8px}
+.metric-card,.surface,.workbench-card,.panel,.inventory-panel{background:linear-gradient(145deg,#171c18f5,#101411f5)!important;border:1px solid #2a342b!important;border-radius:12px!important;box-shadow:0 12px 40px #0002}
+.metric-card{position:relative;overflow:hidden;padding:19px}
+.metric-card:after{content:"";position:absolute;right:-25px;top:-30px;width:100px;height:100px;border:1px solid #d5ff5518;border-radius:50%;box-shadow:0 0 0 15px #d5ff5505,0 0 0 30px #d5ff5503}
+.metric-icon{background:#d5ff5515!important;color:#d5ff55!important;border-radius:8px}
+.metric-value{font-family:Manrope,sans-serif;font-size:clamp(25px,2.4vw,34px);letter-spacing:-1.2px}
+.trend{color:#d5ff55!important}
+.metric-spark span{background:linear-gradient(180deg,#d5ff55,#d5ff5520)!important;border-radius:3px 3px 0 0}
+button,.btn{transition:transform .18s ease,background .18s ease,border-color .18s ease}
+button:hover,.btn:hover{transform:translateY(-1px)}
+.btn-primary,.primary-btn{background:#d5ff55!important;color:#11160e!important;border:1px solid #d5ff55!important;font-weight:700}
+.btn-primary:hover,.primary-btn:hover{background:#e2ff8a!important;box-shadow:0 6px 24px #d5ff5520}
+.btn-secondary,.icon-btn{background:#191f1a!important;color:#e8ede4!important;border:1px solid #303a31!important}
+input,select,.search-input{background:#0d110e!important;color:#f1f0e9!important;border:1px solid #303a31!important;border-radius:8px!important}
+input:focus,select:focus{outline:1px solid #d5ff55!important;border-color:#d5ff55!important}
+table th{color:#8f9a8d!important;letter-spacing:1.2px;text-transform:uppercase;font-size:9px}
+table td{border-color:#252e26!important}
+tr:hover td{background:#d5ff5507!important}
+.status.healthy{background:#d5ff5517!important;color:#d5ff55!important}
+.status.low-stock{background:#ffb45b17!important;color:#ffbf7a!important}
+.status.out-of-stock{background:#ff796b17!important;color:#ff9a8f!important}
+.api-output{background:linear-gradient(145deg,#151b16,#101411)!important;border-color:#364236!important;border-radius:12px!important}
+.output-success{border-color:#4d6638!important}.output-error{border-color:#70443d!important}
+.output-state{background:#d5ff55!important;color:#11160e!important;border-radius:7px}
+.output-primary{background:radial-gradient(ellipse at 90% 10%,#d5ff5515,transparent 58%)!important}
+.output-primary strong{font-size:clamp(32px,4vw,46px)!important;color:#d5ff55!important;letter-spacing:-1.8px}
+.output-facts>div{background:#0e130f!important;border-color:#2b352b!important}
+.output-note{background:#1a2016!important;border-left-color:#d5ff55!important;color:#cbd7c0!important}
+.raw-response{background:#0c100d!important}
+.raw-response summary{color:#d5ff55!important}
+.ambient-video video{opacity:.23!important;filter:saturate(.45) contrast(1.15)!important}
+.ambient-video-shade{background:linear-gradient(90deg,rgba(7,10,8,.9),rgba(7,10,8,.67) 55%,rgba(7,10,8,.82)),linear-gradient(0deg,#0b0d0c 0%,transparent 65%,rgba(7,10,8,.35))!important}
+.sidebar,.topbar{backdrop-filter:blur(18px)}
+.workbench-section:before{background:radial-gradient(ellipse at 12% 0%,#d5ff550c,transparent 55%)!important}
+.toast{background:#d5ff55!important;color:#10150d!important;border-radius:8px}
+@media(max-width:700px){.welcome-row h1{font-size:32px}.metric-card{padding:15px}.ambient-video video{opacity:.13!important}}
