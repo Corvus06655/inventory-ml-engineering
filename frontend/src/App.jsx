@@ -265,6 +265,15 @@ const FEATURE_CARDS = [
   { title: 'Invoice Risk Screening', description: 'Surface invoice mismatch and receiving-delay rules for manual review.', image: 'https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg?auto=compress&cs=tinysrgb&w=1000', icon: FileWarning, tag: 'RULE-BASED CHECKS', section: 'Invoice checks' },
   { title: 'Interactive Analytics', description: 'Explore stock signals, summary metrics and trend visualizations.', image: 'https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg?auto=compress&cs=tinysrgb&w=1000', icon: ChartNoAxesCombined, tag: 'DECISION SUPPORT', section: 'Analytics & Reports' },
 ];
+const sectionSlug = section => section.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const getRouteState = historyState => {
+  if (historyState?.stockwiseDashboard === true) {
+    return { dashboard: true, section: historyState.stockwiseSection || 'Overview' };
+  }
+  const match = window.location.hash.match(/^#dashboard\/([a-z0-9-]+)$/i);
+  const section = match && navItems.find(item => sectionSlug(item.name) === match[1])?.name;
+  return section ? { dashboard: true, section } : { dashboard: false, section: 'Overview' };
+};
 
 function LandingPage({ onExplore }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -335,7 +344,7 @@ function LandingPage({ onExplore }) {
     <section className="tech-strip" id="technology"><div className="tech-strip-label">BUILT WITH THE PROJECT'S TECHNOLOGY</div><div className="tech-items"><div><Atom/><span>React</span></div><div><Code2/><span>Python</span></div><div><Activity/><span>FastAPI</span></div><div><Database/><span>SQLite / pandas</span></div><div><ChartNoAxesCombined/><span>scikit-learn</span></div><div><Boxes/><span>Recharts</span></div></div></section>
 
     <section className="feature-section" id="features"><div className="section-heading"><div><span className="section-tag">CAPABILITIES / 01—04</span><h2>Every signal.<br/><em>One clear picture.</em></h2></div><p>From inventory visibility to invoice-level checks, Stockwise brings the project's tools into one focused workspace.</p></div>
-      <div className="feature-grid">{FEATURE_CARDS.map((feature,index)=>{const Icon=feature.icon;return <motion.article className="feature-card" key={feature.title} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.42,delay:index*.07}}><div className="feature-image"><img src={feature.image} alt="" loading="lazy"/><span className="feature-image-shade"/><span className="feature-index">0{index+1}</span><button type="button" className="feature-icon" aria-label={`Open ${feature.title}`} title={`Open ${feature.title}`} onClick={() => onExplore(feature.section)}><Icon size={21}/></button></div><div className="feature-copy"><span className="feature-tag">{feature.tag}</span><h3>{feature.title}</h3><p>{feature.description}</p><button onClick={() => onExplore(feature.section)}>Explore capability <ArrowRight size={14}/></button></div></motion.article>})}</div>
+      <div className="feature-grid">{FEATURE_CARDS.map((feature,index)=>{const Icon=feature.icon;return <motion.a className="feature-card" key={feature.title} href={`#dashboard/${sectionSlug(feature.section)}`} aria-label={`Open ${feature.title}`} onClick={event=>{event.preventDefault();onExplore(feature.section)}} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.42,delay:index*.07}}><div className="feature-image"><img src={feature.image} alt="" loading="lazy"/><span className="feature-image-shade"/><span className="feature-index">0{index+1}</span><span className="feature-icon" aria-hidden="true"><Icon size={21}/></span></div><div className="feature-copy"><span className="feature-tag">{feature.tag}</span><h3>{feature.title}</h3><p>{feature.description}</p><span className="feature-action">Explore capability <ArrowRight size={14}/></span></div></motion.a>})}</div>
     </section>
 
     <section className="about-section" id="about"><div className="about-orbit" aria-hidden="true"><div/><div/><div/><GlobeIcon/></div><div className="about-copy"><span className="section-tag">↗ WHY STOCKWISE</span><h2>AI-powered supply-chain <em>intelligence.</em></h2><p>Connect inventory signals, freight-cost estimation, and invoice screening in one accessible demo platform. Move from a raw number to a more informed next step.</p><div className="about-pills"><span><CircleCheck size={15}/> Clear data provenance</span><span><CircleCheck size={15}/> Transparent demo limits</span><span><CircleCheck size={15}/> Real API requests</span></div></div></section>
@@ -351,34 +360,34 @@ function LandingPage({ onExplore }) {
 function GlobeIcon(){return <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" strokeOpacity=".6"/><ellipse cx="60" cy="60" rx="22" ry="48" fill="none" stroke="currentColor" strokeOpacity=".45"/><ellipse cx="60" cy="60" rx="48" ry="18" fill="none" stroke="currentColor" strokeOpacity=".45"/><path d="M14 60h92M22 38h76M22 82h76" fill="none" stroke="currentColor" strokeOpacity=".45"/></svg>}
 
 export default function App() {
-  const [showDashboard,setShowDashboard] = useState(() => window.history.state?.stockwiseDashboard === true);
-  const [activeSection, setActiveSection] = useState(() => window.history.state?.stockwiseSection || 'Overview');
+  const [showDashboard,setShowDashboard] = useState(() => getRouteState(window.history.state).dashboard);
+  const [activeSection, setActiveSection] = useState(() => getRouteState(window.history.state).section);
   useEffect(() => {
     document.title = showDashboard ? 'Stockwise — Interactive Dashboard' : 'Stockwise — AI Supply Chain Intelligence';
   }, [showDashboard]);
   useEffect(() => {
     const handlePopState = event => {
-      const dashboard = event.state?.stockwiseDashboard === true;
-      setShowDashboard(dashboard);
-      setActiveSection(event.state?.stockwiseSection || 'Overview');
-      if (!dashboard) window.scrollTo({ top: 0, behavior: 'instant' });
+      const route = getRouteState(event.state);
+      setShowDashboard(route.dashboard);
+      setActiveSection(route.section);
+      if (!route.dashboard) window.scrollTo({ top: 0, behavior: 'instant' });
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
   const goHome = () => {
-    window.history.pushState({ stockwiseDashboard: false }, '', window.location.pathname);
+    window.history.pushState({ stockwiseDashboard: false, stockwiseSection: 'Overview' }, '', `${window.location.pathname}#home`);
     setShowDashboard(false);
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   const goDashboard = (section = 'Overview') => {
-    window.history.pushState({ stockwiseDashboard: true, stockwiseSection: section }, '', window.location.pathname);
+    window.history.pushState({ stockwiseDashboard: true, stockwiseSection: section }, '', `${window.location.pathname}#dashboard/${sectionSlug(section)}`);
     setActiveSection(section);
     setShowDashboard(true);
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   const navigateDashboard = section => {
-    window.history.pushState({ stockwiseDashboard: true, stockwiseSection: section }, '', window.location.pathname);
+    window.history.pushState({ stockwiseDashboard: true, stockwiseSection: section }, '', `${window.location.pathname}#dashboard/${sectionSlug(section)}`);
     setActiveSection(section);
   };
   return showDashboard ? <DashboardApp onBack={goHome} initialSection={activeSection} onNavigate={navigateDashboard}/> : <LandingPage onExplore={goDashboard}/>;
