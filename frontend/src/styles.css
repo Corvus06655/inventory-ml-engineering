@@ -464,7 +464,8 @@ tbody tr:hover { background: #fbfbfe; }
 .feature-card:hover .feature-image img{transform:scale(1.045);opacity:.84}
 .feature-image-shade{position:absolute;inset:0;background:linear-gradient(0deg,#08100c 0%,transparent 75%),linear-gradient(90deg,#06100a38,transparent)}
 .feature-index{position:absolute;top:12px;right:12px;color:#d6e9da;font-size:9px;letter-spacing:1px}
-.feature-icon{position:absolute;left:15px;bottom:12px;width:33px;height:33px;display:grid;place-items:center;border:1px solid #b8ff6447;border-radius:9px;background:#0b170fdb;color:var(--land-lime)}
+.feature-icon{position:absolute;left:15px;bottom:12px;width:33px;height:33px;padding:0;display:grid;place-items:center;border:1px solid #b8ff6447;border-radius:9px;background:#0b170fdb;color:var(--land-lime);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
+.feature-icon:hover{transform:translateY(-2px);border-color:var(--land-lime);box-shadow:0 0 14px #b8ff6430}
 .feature-copy{padding:15px 16px 17px}
 .feature-tag{font-size:8px;letter-spacing:1.3px;color:#7eaa77}
 .feature-copy h3{margin:8px 0 7px;font-size:15px;letter-spacing:-.3px}
