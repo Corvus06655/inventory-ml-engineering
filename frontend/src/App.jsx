@@ -163,8 +163,7 @@ function DashboardApp({ onBack }) {
   };
 
   const exportCsv = () => {
-    const csv = ['SKU,Product,Category,Stock,Reorder point,Vendor,Status', ...filtered.map(row => [row.sku, row.name, row.category, row.stock, row.reorder, row.vendor, row.status].map(value => `"${String(value).replaceAll('"', '""')}"`).join(','))].join('
-');
+    const csv = ['SKU,Product,Category,Stock,Reorder point,Vendor,Status', ...filtered.map(row => [row.sku, row.name, row.category, row.stock, row.reorder, row.vendor, row.status].map(value => `"${String(value).replaceAll('"', '""')}"`).join(','))].join('\\n');
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
