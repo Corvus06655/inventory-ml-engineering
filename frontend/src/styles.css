@@ -533,3 +533,9 @@ html:has(.landing), body:has(.landing), body:has(.landing) #root { background:#0
 .landing .feature-copy h3,.landing .section-heading h2,.landing .about-copy h2,.landing .landing-bottom-cta h2,.landing .workflow-section>h2 { color:#f5f7f5; }
 @media(max-width:780px){.landing .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 @media(max-width:480px){.landing .feature-grid{grid-template-columns:1fr !important;}}
+
+
+/* Persistent route back to the marketing home from every dashboard section. */
+.dashboard-home-btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;min-height:34px;padding:0 11px;margin-right:10px;font-size:11px}
+.topbar-start{display:flex;align-items:center;min-width:0}
+@media(max-width:780px){.dashboard-home-btn{min-height:32px;padding:0 8px;margin-right:5px;font-size:10px}.topbar-start{gap:5px}}
