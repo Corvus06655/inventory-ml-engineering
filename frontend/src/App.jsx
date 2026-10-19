@@ -163,7 +163,7 @@ function DashboardApp({ onBack, initialSection = 'Overview', onNavigate }) {
       const data = await response.json();
       setResult({ kind, ok: response.ok, data });
     } catch {
-      setResult({ kind, ok: false, data: { error: 'The API is waking up or unavailable. Try again in a moment.' } });
+      setResult({ kind, ok: false, data: { error: 'The API or model is unavailable. Please try again after the service is online.' } });
     } finally { setBusy(false); }
   };
 
@@ -279,14 +279,14 @@ function LandingPage({ onExplore }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
-  const [apiHealth, setApiHealth] = useState('Checking');
+  const [apiHealth, setApiHealth] = useState('Checking API…');
   const [healthData, setHealthData] = useState(null);
   useEffect(() => {
     let active = true;
     fetch(`${API}/health`, { signal: AbortSignal.timeout(10000) })
       .then(response => { if (!response.ok) throw new Error('API unavailable'); return response.json(); })
-      .then(data => { if (active) { setHealthData(data); setApiHealth(data.status === 'ok' ? 'API reachable' : 'Check API'); } })
-      .catch(() => { if (active) setApiHealth('Waking up'); });
+      .then(data => { if (active) { setHealthData(data); setApiHealth(data.status === 'ok' && data.model_loaded ? 'API + model online' : data.status === 'ok' ? 'API online · model loading' : 'Check API'); } })
+      .catch(() => { if (active) setApiHealth('API unavailable'); });
     return () => { active = false; };
   }, []);
   useEffect(() => {
@@ -308,7 +308,7 @@ function LandingPage({ onExplore }) {
         <a href="#technology" onClick={e => {e.preventDefault();go('technology')}}>Technology</a>
         <a href="#about" onClick={e => {e.preventDefault();go('about')}}>About</a>
       </nav>
-      <div className="landing-nav-actions"><span className="api-mini"><i className={apiHealth==='API reachable'?'online':''}/>{apiHealth}</span><button className="landing-cta" onClick={onExplore}>Explore Dashboard <ArrowRight size={15}/></button></div>
+      <div className="landing-nav-actions"><span className="api-mini"><i className={apiHealth==='API + model online'?'online':''}/>{apiHealth}</span><button className="landing-cta" onClick={onExplore}>Explore Dashboard <ArrowRight size={15}/></button></div>
     </header>
 
     <section className="landing-hero" id="home">
