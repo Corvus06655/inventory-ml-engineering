@@ -1,6 +1,7 @@
 services:
   - type: web
-    name: inventory-vendor-intelligence-api
+    # Keep the Render service slug aligned with the API URL used by the frontend.
+    name: inventory-ml-engineering-api
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
